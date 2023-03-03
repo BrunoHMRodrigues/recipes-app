@@ -7,6 +7,7 @@ import Login from './pages/Login';
 function App() {
   return (
     <div className="meals">
+      <Header />
       <Switch>
         <Route exact path="/" component={ Login } />
       </Switch>
