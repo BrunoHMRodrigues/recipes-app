@@ -1,0 +1,57 @@
+.header {
+  align-items: center;
+  background: #fcdc36;
+  display: flex;
+  flex-direction: column;
+  height: 15.7rem;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100vw;
+}
+
+.upSide {
+  align-items: center;
+  display: flex;
+  height: 5.2rem;
+  padding: 0.6rem 2.6rem;
+  width: min(50rem, 100vw);
+}
+
+.downSide {
+  align-items: center;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  gap: 1.34rem;
+  height: 10.5rem;
+  justify-content: center;
+  padding: 3.1rem 0 0;
+  width: 100%;
+}
+
+.downSide h2 {
+  color: rgba(65, 25, 127, 1);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.rightSide {
+  align-items: center;
+  display: flex;
+  gap: 1.6rem;
+  height: 5.2rem;
+  margin-left: auto;
+}
+
+.rightSide button {
+  background: none;
+  border: none;
+}
+
+.leftSide {
+  align-items: center;
+  display: flex;
+  gap: 2rem;
+  height: 5.2rem;
+}
