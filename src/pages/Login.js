@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { ValidateEmail } from '../helper/emailValidate';
 
 function Login() {
   const [infoValidation, setInfoValidation] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const history = useHistory();
 
   const handleInputs = ({ target }) => {
     if (target.name === 'email') {
@@ -28,6 +30,7 @@ function Login() {
   const handleEnter = () => {
     const saveEmail = { email };
     localStorage.setItem('user', JSON.stringify(saveEmail));
+    history.push('/meals');
   };
 
   return (
@@ -58,7 +61,6 @@ function Login() {
         onClick={ handleEnter }
       >
         Enter
-
       </button>
     </div>
   );
