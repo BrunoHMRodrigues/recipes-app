@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 function CardTags({ tag, index }) {
   return (
-    <p data-testid={ `${index}-${tag}-horizontal-tag` }>{tag}</p>
+    <p data-testid={ `${index}-${tag}-horizontal-tag` } className="m-1">{tag}</p>
   );
 }
 

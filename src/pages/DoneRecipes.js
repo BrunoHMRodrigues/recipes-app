@@ -1,5 +1,6 @@
 import React from 'react';
 import CardRecipe from '../components/CardRecipe';
+import './DoneRecipes.css';
 
 // const doneRecipes = [{
 //   id: 52770,
@@ -16,27 +17,32 @@ import CardRecipe from '../components/CardRecipe';
 function DoneRecipes() {
   const getDoneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
   return (
-    <div>
-      <button
-        type="button"
-        data-testid="filter-by-all-btn"
-      >
-        All
-      </button>
+    <div className="d-flex flex-column justify-content-center">
+      <div className="d-flex justify-content-evenly">
+        <button
+          type="button"
+          data-testid="filter-by-all-btn"
+          className="filter-button-done-recipes"
+        >
+          All
+        </button>
 
-      <button
-        type="button"
-        data-testid="filter-by-meal-btn"
-      >
-        Meals
-      </button>
+        <button
+          type="button"
+          data-testid="filter-by-meal-btn"
+          className="filter-button-done-recipes"
+        >
+          Meals
+        </button>
 
-      <button
-        type="button"
-        data-testid="filter-by-drink-btn"
-      >
-        Drinks
-      </button>
+        <button
+          type="button"
+          data-testid="filter-by-drink-btn"
+          className="filter-button-done-recipes"
+        >
+          Drinks
+        </button>
+      </div>
 
       {getDoneRecipes.map((recipe, index) => (<CardRecipe
         recipe={ recipe }
