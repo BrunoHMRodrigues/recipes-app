@@ -1,7 +1,7 @@
 import React from 'react';
-import CardReceipts from '../components/CardReceipts';
+import CardRecipe from '../components/CardRecipe';
 
-// const doneReceipt = [{
+// const doneRecipes = [{
 //   id: 52770,
 //   type: 'meal',
 //   nationality: 'Italian',
@@ -12,9 +12,9 @@ import CardReceipts from '../components/CardReceipts';
 //   doneDate: '20/06/2023',
 //   tags: ['italian', 'paste'],
 // }];
-// localStorage.setItem('doneRecipes', JSON.stringify(doneReceipt));
+// localStorage.setItem('doneRecipes', JSON.stringify(doneRecipes));
 function DoneRecipes() {
-  const getDoneReceipts = JSON.parse(localStorage.getItem('doneRecipes'));
+  const getDoneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
   return (
     <div>
       <button
@@ -38,10 +38,10 @@ function DoneRecipes() {
         Drinks
       </button>
 
-      {getDoneReceipts.map((receipt, index) => (<CardReceipts
-        receipt={ receipt }
+      {getDoneRecipes.map((recipe, index) => (<CardRecipe
+        recipe={ recipe }
         index={ index }
-        key={ receipt.id }
+        key={ recipe.id }
       />))}
 
     </div>
