@@ -39,33 +39,35 @@ export default function Header() {
           ? null
           : (
             <div className={ styles.header }>
-              <header>
-                <NavLink to="/">
+              <div className={ styles.upSide }>
+                <NavLink to="/" className={ styles.leftSide }>
                   <img src={ appIcon } alt="logo" />
                   <img src={ appName } alt="recipe app" />
                 </NavLink>
 
-                {
-                  pathname === '/profile'
+                <div className={ styles.rightSide }>
+                  {
+                    pathname === '/profile'
                   || pathname === '/favorite-recipes'
                   || pathname === '/done-recipes' ? null
-                    : (
-                      <button
-                        data-testid="search-top-btn"
-                        src={ searchIcon }
-                        type="button"
-                        alt="search icon"
-                      >
-                        <img src={ searchIcon } alt="search icon" />
-                      </button>
-                    )
-                }
+                      : (
+                        <button
+                          data-testid="search-top-btn"
+                          src={ searchIcon }
+                          type="button"
+                          alt="search icon"
+                        >
+                          <img src={ searchIcon } alt="search icon" />
+                        </button>
+                      )
+                  }
 
-                <NavLink to="/profile">
-                  <img data-testid="profile-top-btn" src={ profileIcon } alt="perfil" />
-                </NavLink>
-              </header>
-              <div>
+                  <NavLink to="/profile">
+                    <img data-testid="profile-top-btn" src={ profileIcon } alt="perfil" />
+                  </NavLink>
+                </div>
+              </div>
+              <div className={ styles.downSide }>
                 <img src={ rightImage().image } alt={ rightImage().title } />
                 <h2 data-testid="page-title">{ rightImage().title }</h2>
               </div>
