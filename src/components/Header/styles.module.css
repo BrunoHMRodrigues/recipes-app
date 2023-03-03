@@ -15,7 +15,7 @@
   display: flex;
   height: 5.2rem;
   padding: 0.6rem 2.6rem;
-  width: min(50rem, 100vw);
+  width: min(var(--wrapper-width), 100vw);
 }
 
 .downSide {

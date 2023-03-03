@@ -12,12 +12,12 @@ import profilePageIcon from '../../images/profilePageIcon.svg';
 import styles from './styles.module.css';
 import SearchBar from '../SearchBar/SearchBar';
 
-export default function Header() {
+function Header() {
   const location = useLocation();
   const { pathname } = location;
-  const [searching, setSearching] = useState(false);
+  const [searching] = useState(false);
 
-  function getPagesItens() {
+  function getPagesItems() {
     if (pathname === '/meals') {
       return { image: mealIcon, title: 'Meals' };
     } if (pathname === '/drinks') {
@@ -69,8 +69,8 @@ export default function Header() {
                 </div>
               </div>
               <div className={ styles.downSide }>
-                <img src={ getPagesItens().image } alt={ getPagesItens().title } />
-                <h2 data-testid="page-title">{ getPagesItens().title }</h2>
+                <img src={ getPagesItems().image } alt={ getPagesItems().title } />
+                <h2 data-testid="page-title">{ getPagesItems().title }</h2>
               </div>
               {searching && <SearchBar />}
             </div>
@@ -79,3 +79,5 @@ export default function Header() {
     </div>
   );
 }
+
+export default Header;

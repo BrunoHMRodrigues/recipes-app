@@ -3,6 +3,8 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Route, Switch } from 'react-router-dom';
 import Login from './pages/Login';
+import Header from './components/Header';
+import Footer from './components/Footer';
 
 function App() {
   return (
@@ -11,6 +13,7 @@ function App() {
       <Switch>
         <Route exact path="/" component={ Login } />
       </Switch>
+      <Footer />
     </div>
   );
 }
