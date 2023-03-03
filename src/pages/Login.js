@@ -5,7 +5,6 @@ function Login() {
   const [infoValidation, setInfoValidation] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  // const [isButtonEnabled, setIsButtonEnabled] = useState(false);
 
   const handleInputs = ({ target }) => {
     if (target.name === 'email') {
@@ -26,9 +25,10 @@ function Login() {
     }
   }, [email, password]);
 
-  // useEffect(() => {
-  //   setIsButtonEnabled(infoValidation);
-  // }, [infoValidation]);
+  const handleEnter = () => {
+    const saveEmail = { email };
+    localStorage.setItem('user', JSON.stringify(saveEmail));
+  };
 
   return (
     <div>
@@ -55,6 +55,7 @@ function Login() {
         type="button"
         data-testid="login-submit-btn"
         disabled={ !infoValidation }
+        onClick={ handleEnter }
       >
         Enter
 
