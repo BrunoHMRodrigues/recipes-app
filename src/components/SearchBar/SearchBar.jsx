@@ -16,7 +16,7 @@ export default function SearchBar() {
         type="text"
         data-testid="search-input"
         value={ inputValue }
-        onChange={ (event) => setInputValue(event.target.value) }
+        onChange={ ({ target: { value } }) => setInputValue(value) }
       />
       <label>
         <input

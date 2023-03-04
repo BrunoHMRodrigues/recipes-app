@@ -15,7 +15,6 @@ import SearchBar from '../SearchBar/SearchBar';
 function Header() {
   const location = useLocation();
   const { pathname } = location;
-  console.log(pathname);
   const [searching, setSearching] = useState(false);
 
   function getPagesItems() {
