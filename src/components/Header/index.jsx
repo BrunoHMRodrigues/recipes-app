@@ -36,9 +36,9 @@ export default function Header() {
   return (
     <div>
       {
-        pathname === '/meals/'
+        pathname.includes('/meals/')
         || pathname === '/'
-        || pathname === '/drinks/'
+        || pathname.includes('/drinks/')
           ? null
           : (
             <div className={ styles.header }>
