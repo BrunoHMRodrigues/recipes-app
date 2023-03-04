@@ -1,8 +1,8 @@
 import React from 'react';
 import userEvent from '@testing-library/user-event';
 import { screen, waitFor } from '@testing-library/react';
-import App from '../../App';
-import { renderWithRouterAndRedux } from './renderWithRouterAndRedux';
+import App from '../App';
+import { renderWithRouterAndRedux } from './helpers/renderWithRouterAndRedux';
 
 const emailTestId = 'email-input';
 const passwordTestId = 'password-input';
