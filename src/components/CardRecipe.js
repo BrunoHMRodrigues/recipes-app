@@ -30,17 +30,22 @@ function CardRecipe({ recipe, index }) {
 
   return (
     <div
+      data-testid="container-done-recipes"
       className="d-flex align-items-start
     justify-content-between m-2 container-doce-recipes"
     >
-      <img
-        src={ image }
-        alt={ name }
-        data-testid={ `${index}-horizontal-image` }
-        className="detail-recipe-image"
-      />
+      <a href={ `/${type}s/${id}` } className="detail-recipe-image">
+        <img
+          src={ image }
+          alt={ name }
+          data-testid={ `${index}-horizontal-image` }
+          className="w-100 h-100"
+        />
+      </a>
       <div className="container-done-recipes-info">
-        <p data-testid={ `${index}-horizontal-name` }>{name}</p>
+        <a href={ `/${type}s/${id}` }>
+          <p data-testid={ `${index}-horizontal-name` }>{name}</p>
+        </a>
 
         <p
           data-testid={ `${index}-horizontal-top-text` }

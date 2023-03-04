@@ -1,4 +1,5 @@
 import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import App from '../App';
 import { renderWithRouterAndRedux } from './helpers/renderWithRouterAndRedux';
 
@@ -58,5 +59,48 @@ describe('Verify if page done-recipes is rendering as intended', () => {
     expect(drinkAlcoholic).toBeInTheDocument();
     const drinkDoneDate = screen.getByTestId('1-horizontal-done-date');
     expect(drinkDoneDate).toBeInTheDocument();
+  });
+});
+
+const recipesTestId = 'container-done-recipes';
+
+describe('Verify if page done-recipes is working as intended', () => {
+  it('Verify if the filters are working as intended', () => {
+    renderWithRouterAndRedux(<App />, { initialEntries });
+    const allRecipes = screen.queryAllByTestId(recipesTestId);
+    expect(allRecipes).toHaveLength(2);
+    const filterMeal = screen.getByTestId('filter-by-meal-btn');
+    userEvent.click(filterMeal);
+    const allMeals = screen.queryAllByTestId(recipesTestId);
+    expect(allMeals).toHaveLength(1);
+    const getMealName = screen.getByText('Spaghetti Bolognese');
+    expect(getMealName).toBeInTheDocument();
+
+    const filterDrink = screen.getByTestId('filter-by-drink-btn');
+    userEvent.click(filterDrink);
+    const allDrink = screen.queryAllByTestId(recipesTestId);
+    expect(allDrink).toHaveLength(1);
+    const getDrinkName = screen.getByText('Margarita');
+    expect(getDrinkName).toBeInTheDocument();
+
+    const filterAll = screen.getByTestId('filter-by-all-btn');
+    userEvent.click(filterAll);
+    const newAllRecipes = screen.queryAllByTestId(recipesTestId);
+    expect(newAllRecipes).toHaveLength(2);
+  });
+
+  it('Verify if Image and Name of recipe is moving to detail page', async () => {
+    const { history } = renderWithRouterAndRedux(<App />, { initialEntries });
+    expect(history.location.pathname).toBe('/done-recipes');
+    const mealImages = screen.queryAllByRole('link', { name: /spaghetti bolognese/i });
+    expect(mealImages).toHaveLength(2);
+
+    // VERIFICAR MANEIRA PARA TESTAR A MUDANÇA DE PÁGINA
+    // const mealImage = mealImages[0];
+    // // const mealName = screen.getByTestId('0-horizontal-name');
+    // userEvent.click(mealImage);
+    // await waitFor(() => {
+    //   expect(history.location.pathname).toBe('/meals/52770');
+    // });
   });
 });
