@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import appIcon from '../../assets/app_icon.svg';
 import appName from '../../assets/app_name.svg';
@@ -10,12 +10,14 @@ import favRecipeIcon from '../../images/favRecipeIcon.svg';
 import doneRecipe from '../../images/doneRecipe.svg';
 import profilePageIcon from '../../images/profilePageIcon.svg';
 import styles from './styles.module.css';
+import SearchBar from '../SearchBar/SearchBar';
 
-export default function Header() {
+function Header() {
   const location = useLocation();
   const { pathname } = location;
+  const [searching, setSearching] = useState(false);
 
-  function rightImage() {
+  function getPagesItems() {
     if (pathname === '/meals') {
       return { image: mealIcon, title: 'Meals' };
     } if (pathname === '/drinks') {
@@ -33,9 +35,9 @@ export default function Header() {
   return (
     <div>
       {
-        pathname === '/meals/'
+        pathname.includes('/meals/')
         || pathname === '/'
-        || pathname === '/drinks/'
+        || pathname.includes('/drinks/')
           ? null
           : (
             <div className={ styles.header }>
@@ -56,24 +58,27 @@ export default function Header() {
                           src={ searchIcon }
                           type="button"
                           alt="search icon"
+                          onClick={ () => setSearching(!searching) }
                         >
                           <img src={ searchIcon } alt="search icon" />
                         </button>
                       )
                   }
-
                   <NavLink to="/profile">
                     <img data-testid="profile-top-btn" src={ profileIcon } alt="perfil" />
                   </NavLink>
                 </div>
               </div>
               <div className={ styles.downSide }>
-                <img src={ rightImage().image } alt={ rightImage().title } />
-                <h2 data-testid="page-title">{ rightImage().title }</h2>
+                <img src={ getPagesItems().image } alt={ getPagesItems().title } />
+                <h2 data-testid="page-title">{ getPagesItems().title }</h2>
               </div>
+              {searching && <SearchBar />}
             </div>
           )
       }
     </div>
   );
 }
+
+export default Header;

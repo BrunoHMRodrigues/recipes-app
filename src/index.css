@@ -1,5 +1,7 @@
 :root {
   font-size: 62.5%;
+
+  --wrapper-width: 50rem;
 }
 
 * {
