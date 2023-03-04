@@ -5,7 +5,7 @@ import { fetchFood } from '../../redux/actions/actions';
 
 export default function SearchBar() {
   const { pathname } = useLocation();
-  const foodType = pathname === '/meals' ? 'themealdb' : 'thecocktaildb';
+  const foodType = pathname === '/meals' ? 'meals' : 'drinks';
   const [endPoint, setEndPoint] = useState('i');
   const [inputValue, setInputValue] = useState('');
   const dispatch = useDispatch();
@@ -50,7 +50,7 @@ export default function SearchBar() {
         data-testid="exec-search-btn"
         onClick={ () => {
           if (endPoint === 'f' && inputValue.length > 1) {
-            window.alert('letras de mais');
+            window.alert('Your search must have only 1 (one) character');
           }
           dispatch(fetchFood({ foodType, endPoint, inputValue }));
         } }

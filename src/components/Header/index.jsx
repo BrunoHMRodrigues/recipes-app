@@ -15,6 +15,7 @@ import SearchBar from '../SearchBar/SearchBar';
 export default function Header() {
   const location = useLocation();
   const { pathname } = location;
+  console.log(pathname);
   const [searching, setSearching] = useState(false);
 
   function getPagesItens() {
@@ -58,6 +59,7 @@ export default function Header() {
                           src={ searchIcon }
                           type="button"
                           alt="search icon"
+                          onClick={ () => setSearching(!searching) }
                         >
                           <img src={ searchIcon } alt="search icon" />
                         </button>

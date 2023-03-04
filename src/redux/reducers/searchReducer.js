@@ -1,12 +1,12 @@
 import { SEARCH } from '../actions/actionTypes';
 
-const searchReducer = (state = {}, { type, payload }) => {
+const recipes = (state = {}, { type, payload }) => {
   switch (type) {
   case SEARCH:
-    return ({ ...state, foods: payload });
+    return ({ ...state, foods: payload, searched: true });
   default:
     return state;
   }
 };
 
-export default searchReducer;
+export default recipes;
