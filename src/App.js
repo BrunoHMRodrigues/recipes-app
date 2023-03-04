@@ -7,6 +7,7 @@ import Header from './components/Header';
 import Meals from './pages/Meals';
 import Recipe from './pages/Recipe';
 import Drinks from './pages/Drinks';
+import Footer from './components/Footer';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/meals" component={ Meals } />
         <Route exact path="/" component={ Login } />
       </Switch>
+      <Footer />
     </div>
   );
 }
