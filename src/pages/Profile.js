@@ -9,6 +9,14 @@ function Profile() {
   const handleRoute = ({ target }) => {
     history.push(`/${target.name}`);
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('doneRecipes');
+    localStorage.removeItem('favoriteRecipes');
+    localStorage.removeItem('inProgressRecipes');
+    history.push('/');
+  };
   return (
     <div>
       <p data-testid="profile-email">{user.email}</p>
@@ -28,7 +36,13 @@ function Profile() {
       >
         Favorite Recipes
       </button>
-      <button type="button" data-testid="profile-logout-btn">Logout</button>
+      <button
+        type="button"
+        data-testid="profile-logout-btn"
+        onClick={ handleLogout }
+      >
+        Logout
+      </button>
 
     </div>
   );
