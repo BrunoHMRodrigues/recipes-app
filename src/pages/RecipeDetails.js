@@ -38,7 +38,6 @@ function RecipeDetails() {
   const list = () => {
     const ingredients = [];
     const maxLength = 20;
-    console.log(meals);
     for (let index = 1; index < maxLength; index += 1) {
       const ingredient = meals[`strIngredient${index}`];
       const measure = meals[`strMeasure${index}`];
@@ -47,7 +46,7 @@ function RecipeDetails() {
         ingredients.push({ ingredient, measure });
       }
     } console.log(ingredients);
-    return ingredients;
+    return ingredients.filter((ingredient) => ingredient);
   };
 
   // O trecho de código "if (meals === null && drinks === null)" verifica se a variável "meals" e "drinks" são nulas. Caso ambas as variáveis sejam nulas, a função retorna uma tag "h1" com o texto "Carregando...".
@@ -57,64 +56,16 @@ function RecipeDetails() {
   }
 
   return (
-    <div>
-      {/* {foodOrDrink === FOOD && meals && (
-        <div>
+    foodOrDrink && (
+      <div className="container-detail-page">
+        <div className="recipe-photo">
           <img
-            src={ meals.strMealThumb }
-            alt="prato"
+            src={ foodOrDrink === FOOD ? meals.strMealThumb : drinks.strDrinkThumb }
+            alt={ foodOrDrink === FOOD ? meals.strMeal : drinks.strDrink }
             data-testid="recipe-photo"
           />
-          <h1 data-testid="recipe-title">
-            { meals.strMeal }
-          </h1>
-          <p data-testid="recipe-category">{ meals.strCategory }</p>
-          <h3>Ingredientes:</h3>
-          {list().map((ingredient, index) => (
-            <CardIngredient
-              ingredient={ ingredient.ingredient }
-              measure={ ingredient.measure }
-              index={ index }
-              key={ index }
-            />
-          ))}
-          <article data-testid="instructions">{meals.strInstructions}</article>
-          <iframe
-            // frameBorder="0"
-            allow="accelerometer; autoplay;
-            clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            width="320"
-            height="240"
-            title={ `videoYoutube ${meals.strMeal}` }
-            src={ meals.strYoutube }
-            data-testid="video"
-          />
         </div>
-      )}
-      {foodOrDrink === DRINK && drinks && drinks.length > 0 && (
         <div>
-          <img
-            src={ drinks.strDrinkThumb }
-            alt="bebida"
-            data-testid="recipe-photo"
-          />
-          <h1 data-testid="recipe-title">
-            { drinks.strDrink }
-          </h1>
-          <p data-testid="recipe-category">{ drinks.strAlcoholic }</p>
-        </div>
-      )} */}
-      {foodOrDrink && (
-        <div className="container-detail-page">
-          <div className="recipe-photo">
-            <img
-              src={ foodOrDrink === FOOD ? meals.strMealThumb : drinks.strDrinkThumb }
-              alt="prato"
-              data-testid="recipe-photo"
-              // className="photo"
-            />
-          </div>
           <h1 data-testid="recipe-title">
             { foodOrDrink === FOOD ? meals.strMeal : drinks.strDrink }
           </h1>
@@ -124,6 +75,8 @@ function RecipeDetails() {
             }
 
           </p>
+        </div>
+        <div>
           <h3>Ingredientes:</h3>
           {list().map((ingredient, index) => (
             <CardIngredient
@@ -133,17 +86,18 @@ function RecipeDetails() {
               key={ index }
             />
           ))}
-          <article data-testid="instructions">
-            {
-              foodOrDrink === FOOD ? meals.strInstructions : drinks.strInstructions
-            }
+        </div>
+        <article data-testid="instructions">
+          {
+            foodOrDrink === FOOD ? meals.strInstructions : drinks.strInstructions
+          }
 
-          </article>
-          {foodOrDrink === FOOD
+        </article>
+        {foodOrDrink === FOOD
         && (
           <iframe
           // frameBorder="0"
-            allow="accelerometer; autoplay;
+            allow="accelerometer;
             clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
             width="320"
@@ -153,10 +107,8 @@ function RecipeDetails() {
             data-testid="video"
           />
         )}
-        </div>
-      )}
-
-    </div>
+      </div>
+    )
   );
 }
 

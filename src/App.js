@@ -7,13 +7,13 @@ import RecipeDetails from './pages/RecipeDetails';
 
 function App() {
   return (
-    <div className="meals">
-      <Switch>
-        <Route exact path="/" component={ Login } />
-        <Route path="/meals/:idReceita" component={ RecipeDetails } />
-        <Route path="/drinks/:idReceita" component={ RecipeDetails } />
-      </Switch>
-    </div>
+    // <div className="meals">
+    <Switch>
+      <Route exact path="/" component={ Login } />
+      <Route path="/meals/:idReceita" component={ RecipeDetails } />
+      <Route path="/drinks/:idReceita" component={ RecipeDetails } />
+    </Switch>
+    // </div>
   );
 }
 
