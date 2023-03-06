@@ -1,0 +1,40 @@
+.container-doce-recipes {
+  background-color: white;
+  width: 350px;
+}
+
+.container-done-recipes-info {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.container-done-recipes-info p {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.msg-copy {
+  font-size: 10px;
+  margin: 5px;
+}
+
+.container-share {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.detail-recipe-image {
+  height: 100px;
+  width: 30%;
+}
+
+.button-share-icon {
+  background-color: transparent;
+  border: transparent;
+  height: 30px;
+  width: 30px;
+}
