@@ -1,0 +1,19 @@
+.container-detail-page {
+    /* width: 360px; */
+    display: flex;
+    flex-direction: column;
+    height: max-content;
+    width: 360px;
+}
+
+.recipe-photo {
+    width: 100vw;
+    height: max-content;
+}
+
+.photo {
+    max-width:360px; 
+    max-height:150px;
+    width: auto;
+    height: auto; 
+}
