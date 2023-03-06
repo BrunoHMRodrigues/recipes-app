@@ -30,17 +30,16 @@ function RecipeDetails() {
     }
   }, [idReceita, dispatch, history]);
 
-  const abc = useSelector((state) => state.recipeReducer);
-  console.log(abc);
-  const { meals, drinks } = abc;
+  const { meals, drinks } = useSelector((state) => state.recipeReducer);
 
   // list é uma função auxiliar que itera sobre os atributos strIngredient1, strIngredient2, ..., strIngredient20 do objeto meals e extrai os ingredientes da receita em um array. Essa função é utilizada posteriormente para renderizar a lista de ingredientes na página.
   const list = () => {
+    const target = foodOrDrink === FOOD ? meals : drinks;
     const ingredients = [];
     const maxLength = 20;
     for (let index = 1; index < maxLength; index += 1) {
-      const ingredient = meals[`strIngredient${index}`];
-      const measure = meals[`strMeasure${index}`];
+      const ingredient = target[`strIngredient${index}`];
+      const measure = target[`strMeasure${index}`];
       // const measure = meals[strMeasure${index}];: Cria uma constante measure que contém o valor da chave "strMeasureX" em meals, onde X é o valor de index.
       if (ingredient) {
         ingredients.push({ ingredient, measure });
