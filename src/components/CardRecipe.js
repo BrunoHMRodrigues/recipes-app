@@ -32,9 +32,9 @@ function CardRecipe({ recipe, index }) {
 
   return (
     <div
-      data-testid="container-done-recipes" // rever isso
+      data-testid="container-recipes"
       className="d-flex align-items-start
-    justify-content-between m-2 container-doce-recipes"
+    justify-content-between m-2 container-recipes"
     >
       <a href={ `/${type}s/${id}` } className="detail-recipe-image">
         <img
@@ -44,7 +44,7 @@ function CardRecipe({ recipe, index }) {
           className="w-100 h-100"
         />
       </a>
-      <div className="container-done-recipes-info">
+      <div className="container-recipes-info">
         <a href={ `/${type}s/${id}` }>
           <p data-testid={ `${index}-horizontal-name` }>{name}</p>
         </a>
@@ -96,7 +96,10 @@ function CardRecipe({ recipe, index }) {
           {linkIsCopied && <p className="msg-copy">Link copied!</p>}
         </div>
         {history.location.pathname === '/favorite-recipes' && (
-          <button type="button">
+          <button
+            type="button"
+            className="button-favorite-icon"
+          >
             <img
               src={ favoriteIcon }
               alt="Favorite Icon"

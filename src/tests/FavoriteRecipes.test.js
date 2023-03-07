@@ -3,8 +3,8 @@ import userEvent from '@testing-library/user-event';
 import App from '../App';
 import { renderWithRouterAndRedux } from './helpers/renderWithRouterAndRedux';
 
-const initialEntries = ['/done-recipes'];
-const doneRecipes = [
+const initialEntries = ['/favorite-recipes'];
+const favoriteRecipes = [
   {
     id: 52770,
     type: 'meal',
@@ -13,8 +13,6 @@ const doneRecipes = [
     alcoholicOrNot: '',
     name: 'Spaghetti Bolognese',
     image: 'https://www.themealdb.com/images/media/meals/sutysw1468247559.jpg',
-    doneDate: '20/06/2023',
-    tags: ['italian', 'paste'],
   },
   {
     id: 11007,
@@ -24,13 +22,11 @@ const doneRecipes = [
     alcoholicOrNot: 'Alcoholic',
     name: 'Margarita',
     image: 'https://www.thecocktaildb.com/images/media/drink/5noda61589575158.jpg',
-    doneDate: '20/06/2023',
-    tags: [],
   },
 ];
-localStorage.setItem('doneRecipes', JSON.stringify(doneRecipes));
+localStorage.setItem('favoriteRecipes', JSON.stringify(favoriteRecipes));
 
-describe('Verify if page done-recipes is rendering as intended', () => {
+describe('Verify if page favorite-recipes is rendering as intended', () => {
   it('Verify if page is rendering all general elements', () => {
     renderWithRouterAndRedux(<App />, { initialEntries });
     const filterAll = screen.getByTestId('filter-by-all-btn');
@@ -48,8 +44,6 @@ describe('Verify if page done-recipes is rendering as intended', () => {
     expect(mealName).toBeInTheDocument();
     const mealCategory = screen.getByTestId('0-horizontal-top-text');
     expect(mealCategory).toBeInTheDocument();
-    const mealDoneDate = screen.getByTestId('0-horizontal-done-date');
-    expect(mealDoneDate).toBeInTheDocument();
 
     const drinkImage = screen.getByTestId('1-horizontal-image');
     expect(drinkImage).toBeInTheDocument();
@@ -57,17 +51,18 @@ describe('Verify if page done-recipes is rendering as intended', () => {
     expect(drinkName).toBeInTheDocument();
     const drinkAlcoholic = screen.getByTestId('1-horizontal-top-text');
     expect(drinkAlcoholic).toBeInTheDocument();
-    const drinkDoneDate = screen.getByTestId('1-horizontal-done-date');
-    expect(drinkDoneDate).toBeInTheDocument();
 
     const shareIcons = screen.queryAllByAltText('Share Icon');
     expect(shareIcons).toHaveLength(2);
+
+    const favoriteIcons = screen.queryAllByAltText('Favorite Icon');
+    expect(favoriteIcons).toHaveLength(2);
   });
 });
 
 const recipesTestId = 'container-recipes';
 
-describe('Verify if page done-recipes is working as intended', () => {
+describe('Verify if page favorite-recipes is working as intended', () => {
   it('Verify if the filters are working as intended', () => {
     renderWithRouterAndRedux(<App />, { initialEntries });
     const allRecipes = screen.queryAllByTestId(recipesTestId);
@@ -94,7 +89,7 @@ describe('Verify if page done-recipes is working as intended', () => {
 
   it('Verify if Image and Name of recipe is moving to detail page', async () => {
     const { history } = renderWithRouterAndRedux(<App />, { initialEntries });
-    expect(history.location.pathname).toBe('/done-recipes');
+    expect(history.location.pathname).toBe('/favorite-recipes');
     const mealImages = screen.queryAllByRole('link', { name: /spaghetti bolognese/i });
     expect(mealImages).toHaveLength(2);
 
