@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import clipboardCopy from 'clipboard-copy';
 import CardTags from './CardTags';
 import shareIcon from '../images/shareIcon.svg';
+import favoriteIcon from '../images/blackHeartIcon.svg';
 import './CardRecipe.css';
 
 function CardRecipe({ recipe, index }) {
@@ -22,11 +23,12 @@ function CardRecipe({ recipe, index }) {
 
   const handleShare = () => {
     const copy = clipboardCopy;
-    console.log(history);
     const linkToShare = `http://localhost:3000/${type}s/${id}`;
     copy(linkToShare);
     setLinkIsCopied(true);
   };
+
+  console.log(history.location.pathname);
 
   return (
     <div
@@ -53,7 +55,9 @@ function CardRecipe({ recipe, index }) {
           {type === 'meal' ? `${nationality} - ${category}` : alcoholicOrNot}
         </p>
 
-        <p data-testid={ `${index}-horizontal-done-date` }>{doneDate}</p>
+        {history.location.pathname === '/done-recipes' && (
+          <p data-testid={ `${index}-horizontal-done-date` }>{doneDate}</p>
+        )}
 
         { type === 'meal' && (
           <section className="d-flex">
@@ -74,21 +78,33 @@ function CardRecipe({ recipe, index }) {
         onClick={ handleShare }
         className="d-flex align-items-center justify-content-center share-icon"
       /> */}
-      <div className="container-share">
-        <button
-          type="button"
-          // data-testid={ `${index}-horizontal-share-btn` }
-          onClick={ handleShare }
-          className="d-flex align-items-center justify-content-center button-share-icon"
-        >
-          <img
-            src={ shareIcon }
-            alt="Share Icon"
-            data-testid={ `${index}-horizontal-share-btn` }
-            className="share-icon"
-          />
-        </button>
-        {linkIsCopied && <p className="msg-copy">Link copied!</p>}
+      <div>
+        <div className="container-share">
+          <button
+            type="button"
+            // data-testid={ `${index}-horizontal-share-btn` }
+            onClick={ handleShare }
+            className="d-flex align-items-center justify-content-center button-share-icon"
+          >
+            <img
+              src={ shareIcon }
+              alt="Share Icon"
+              data-testid={ `${index}-horizontal-share-btn` }
+              className="share-icon"
+            />
+          </button>
+          {linkIsCopied && <p className="msg-copy">Link copied!</p>}
+        </div>
+        {history.location.pathname === '/favorite-recipes' && (
+          <button type="button">
+            <img
+              src={ favoriteIcon }
+              alt="Favorite Icon"
+              data-testid={ `${index}-horizontal-favorite-btn` }
+            />
+          </button>
+        )}
+
       </div>
     </div>
   );
@@ -96,7 +112,7 @@ function CardRecipe({ recipe, index }) {
 
 CardRecipe.propTypes = {
   recipe: PropTypes.shape({
-    id: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
     type: PropTypes.string.isRequired,
     nationality: PropTypes.string.isRequired,
     category: PropTypes.string.isRequired,
