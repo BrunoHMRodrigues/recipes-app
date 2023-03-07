@@ -1,5 +1,4 @@
 import { screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import App from '../App';
 import DETAIL_API from './helpers/detailsFetchTest';
 import { renderWithRouterAndRedux } from './helpers/renderWithRouterAndRedux';
