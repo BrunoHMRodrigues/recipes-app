@@ -35,7 +35,9 @@ function FavoriteRecipes() {
     setFilterBy(name);
   };
 
-  const getFavotireRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+  const localFavoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+  const [favoriteRecipes, setFavoriteRecipes] = useState(localFavoriteRecipes);
+
   return (
     <div className="d-flex flex-column justify-content-center">
       <div className="d-flex justify-content-evenly">
@@ -71,10 +73,11 @@ function FavoriteRecipes() {
       </div>
 
       {
-        getFavotireRecipes
+        favoriteRecipes
           .filter((recipe) => (recipe.type === filterBy || filterBy === 'all'))
           .map((recipe, index) => (<CardRecipe
             recipe={ recipe }
+            setFavoriteRecipes={ setFavoriteRecipes }
             index={ index }
             key={ recipe.id }
           />))

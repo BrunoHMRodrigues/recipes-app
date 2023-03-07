@@ -7,7 +7,7 @@ import shareIcon from '../images/shareIcon.svg';
 import favoriteIcon from '../images/blackHeartIcon.svg';
 import './CardRecipe.css';
 
-function CardRecipe({ recipe, index }) {
+function CardRecipe({ recipe, index, setFavoriteRecipes }) {
   const {
     id,
     type,
@@ -21,11 +21,23 @@ function CardRecipe({ recipe, index }) {
   const history = useHistory();
   const [linkIsCopied, setLinkIsCopied] = useState(false);
 
+  // const [favoriteRecipes, setFavoriteRecipes] = useState();
+
   const handleShare = () => {
     const copy = clipboardCopy;
     const linkToShare = `http://localhost:3000/${type}s/${id}`;
     copy(linkToShare);
     setLinkIsCopied(true);
+  };
+
+  const handleUnfavorite = ({ target }) => {
+    const { id: idRecipe } = target;
+    console.log(idRecipe);
+    const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    const newFavoriteRecipes = favoriteRecipes
+      .filter((getRecipe) => Number(getRecipe.id) !== Number(idRecipe));
+    localStorage.setItem('favoriteRecipes', JSON.stringify(newFavoriteRecipes));
+    setFavoriteRecipes(newFavoriteRecipes);
   };
 
   const { location: { pathname } } = history;
@@ -98,11 +110,14 @@ function CardRecipe({ recipe, index }) {
         {history.location.pathname === '/favorite-recipes' && (
           <button
             type="button"
+            onClick={ handleUnfavorite }
+            id={ id }
             className="button-favorite-icon"
           >
             <img
               src={ favoriteIcon }
               alt="Favorite Icon"
+              id={ id }
               data-testid={ `${index}-horizontal-favorite-btn` }
             />
           </button>
@@ -126,6 +141,7 @@ CardRecipe.propTypes = {
     tags: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
   }).isRequired,
   index: PropTypes.number.isRequired,
+  setFavoriteRecipes: PropTypes.func.isRequired,
 };
 
 export default CardRecipe;
