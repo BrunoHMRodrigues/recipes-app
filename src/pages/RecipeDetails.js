@@ -18,7 +18,6 @@ function RecipeDetails() {
 
   useEffect(() => {
     const { location: { pathname } } = history;
-    console.log(pathname);
     if (pathname.includes('/meals/')) {
       act(() => {
         dispatch(fetchMeals(idReceita));
@@ -30,7 +29,22 @@ function RecipeDetails() {
     }
   }, [idReceita, dispatch, history]);
 
+  const [recipeIsDone, setRecipesDone] = useState(false);
+
   const { meals, drinks } = useSelector((state) => state.recipeReducer);
+
+  useEffect(() => {
+    const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
+    const target = foodOrDrink === FOOD ? meals : drinks;
+    if (doneRecipes > 0 && target) {
+      for (let index = 0; index < doneRecipes.length; index += 1) {
+        if (doneRecipes[index].id === target.id) {
+          setRecipesDone(true);
+        }
+      }
+      setRecipesDone(true);
+    }
+  }, [drinks, foodOrDrink, meals]);
 
   // list é uma função auxiliar que itera sobre os atributos strIngredient1, strIngredient2, ..., strIngredient20 do objeto meals e extrai os ingredientes da receita em um array. Essa função é utilizada posteriormente para renderizar a lista de ingredientes na página.
   const list = () => {
@@ -44,7 +58,7 @@ function RecipeDetails() {
       if (ingredient) {
         ingredients.push({ ingredient, measure });
       }
-    } console.log(ingredients);
+    }
     return ingredients.filter((ingredient) => ingredient);
   };
 
@@ -106,6 +120,18 @@ function RecipeDetails() {
             data-testid="video"
           />
         )}
+        {/* Espaço para recomendações  */}
+        {!recipeIsDone && (
+          <button
+            className="btn-start-recipe"
+            type="button"
+            data-testid="start-recipe-btn"
+          >
+            Start Recipe
+          </button>
+
+        )}
+
       </div>
     )
   );
