@@ -28,11 +28,11 @@ function CardRecipe({ recipe, index }) {
     setLinkIsCopied(true);
   };
 
-  console.log(history.location.pathname);
+  const { location: { pathname } } = history;
 
   return (
     <div
-      data-testid="container-done-recipes"
+      data-testid="container-done-recipes" // rever isso
       className="d-flex align-items-start
     justify-content-between m-2 container-doce-recipes"
     >
@@ -55,11 +55,11 @@ function CardRecipe({ recipe, index }) {
           {type === 'meal' ? `${nationality} - ${category}` : alcoholicOrNot}
         </p>
 
-        {history.location.pathname === '/done-recipes' && (
+        {pathname === '/done-recipes' && (
           <p data-testid={ `${index}-horizontal-done-date` }>{doneDate}</p>
         )}
 
-        { type === 'meal' && (
+        { (type === 'meal' && pathname === '/done-recipes') && (
           <section className="d-flex">
             {tags
               .map((tag) => (<CardTags
