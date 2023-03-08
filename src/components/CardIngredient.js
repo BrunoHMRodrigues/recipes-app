@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import './CardIngredient.css';
 
 function CardIngredient({ ingredient, index, measure }) {
   return (
-    <p data-testid={ `${index}-ingredient-name-and-measure` }>
+    <p data-testid={ `${index}-ingredient-name-and-measure` } className="ingredient">
       { `${ingredient} ${measure}` }
     </p>
   );
