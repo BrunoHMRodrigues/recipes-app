@@ -2,9 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { act } from 'react-dom/test-utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
+import clipboardCopy from 'clipboard-copy';
 import { fetchDrinks, fetchMeals } from '../redux/actions/detailsAction';
 import CardIngredient from '../components/CardIngredient';
 import './RecipeDetails.css';
+import shareIcon from '../images/shareIcon.svg';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 
 // const inProgressRecipes = {
 //   meals: {
@@ -38,11 +42,13 @@ function RecipeDetails() {
 
   const [recipeIsDone, setRecipesDone] = useState(false);
   const [recipeIsInProgress, setRecipeIsInProgress] = useState(false);
+  const [linkIsCopied, setLinkIsCopied] = useState(false);
+  const [recipeIsFavorited, setRecipeIsFavorited] = useState(false);
 
   const { meals, drinks } = useSelector((state) => state.recipeReducer);
 
   const checkRecipeIsDone = (doneRecipes, target) => {
-    if (doneRecipes) {
+    if (doneRecipes && target) {
       return doneRecipes.some((recipe) => recipe.id === target.id);
     }
     return false;
@@ -65,27 +71,22 @@ function RecipeDetails() {
       return false;
     };
 
-    // if (doneRecipes > 0 && target) {
-    //   for (let index = 0; index < doneRecipes.length; index += 1) {
-    //     if (doneRecipes[index].id === target.id) {
-    //       setRecipesDone(true);
-    //     }
-    //   }
-    //   setRecipesDone(true);
-    // }
-
-    // if (target && foodOrDrink === FOOD && inProgressRecipes && inProgressRecipes.meals
-    //   && Object.keys(inProgressRecipes.meals).includes(target.idMeal)) {
-    //   setRecipeIsInProgress(true);
-    // }
-
-    // if (target && foodOrDrink === DRINK && inProgressRecipes && inProgressRecipes.drinks
-    //   && Object.keys(inProgressRecipes.drinks).includes(target.idDrink)) {
-    //   setRecipeIsInProgress(true);
-    // }
     setRecipesDone(checkRecipeIsDone(doneRecipes, target));
     setRecipeIsInProgress(checkRecipeIsInProgress());
   }, [drinks, foodOrDrink, meals]);
+
+  useEffect(() => {
+    const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    if (favoriteRecipes) {
+      for (let index = 0; index < favoriteRecipes.length; index += 1) {
+        if (favoriteRecipes[index].id === idReceita) {
+          setRecipeIsFavorited(true);
+          return;
+        }
+      }
+      setRecipeIsFavorited(false);
+    }
+  }, [idReceita]);
 
   // list é uma função auxiliar que itera sobre os atributos strIngredient1, strIngredient2, ..., strIngredient20 do objeto meals e extrai os ingredientes da receita em um array. Essa função é utilizada posteriormente para renderizar a lista de ingredientes na página.
   const list = () => {
@@ -114,6 +115,69 @@ function RecipeDetails() {
     history.push(`${pathname}/in-progress`);
   };
 
+  const handleShare = () => {
+    const copy = clipboardCopy;
+    let type = '';
+
+    if (foodOrDrink === FOOD) {
+      type = 'meals';
+    }
+    if (foodOrDrink === DRINK) {
+      type = 'drinks';
+    }
+    const linkToShare = `http://localhost:3000/${type}/${idReceita}`;
+    copy(linkToShare);
+    setLinkIsCopied(true);
+  };
+
+  const handleFavorite = () => {
+    const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    if (recipeIsFavorited) {
+      console.log('entrou');
+      // const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+      const newFavoriteRecipes = favoriteRecipes
+        .filter((getRecipe) => Number(getRecipe.id) !== Number(idReceita));
+      localStorage.setItem('favoriteRecipes', JSON.stringify(newFavoriteRecipes));
+      setRecipeIsFavorited(false);
+    } else {
+      // let favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+      let newFavoriteRecipes = favoriteRecipes;
+      if (!newFavoriteRecipes) {
+        newFavoriteRecipes = [];
+      }
+      if (foodOrDrink === FOOD) {
+        const recipe = {
+          id: meals.idMeal,
+          type: 'meal',
+          nationality: meals.strArea,
+          category: meals.strCategory,
+          alcoholicOrNot: '',
+          name: meals.strMeal,
+          image: meals.strMealThumb,
+        };
+        newFavoriteRecipes.push(recipe);
+        localStorage.setItem('favoriteRecipes', JSON.stringify(newFavoriteRecipes));
+        setRecipeIsFavorited(true);
+      }
+      if (foodOrDrink === DRINK) {
+        const recipe = {
+          id: drinks.idDrink,
+          type: 'drink',
+          nationality: '',
+          category: drinks.strCategory,
+          alcoholicOrNot: drinks.strAlcoholic,
+          name: drinks.strDrink,
+          image: drinks.strDrinkThumb,
+        };
+        newFavoriteRecipes.push(recipe);
+        localStorage.setItem('favoriteRecipes', JSON.stringify(newFavoriteRecipes));
+        setRecipeIsFavorited(true);
+      }
+    }
+
+    // setFavoriteRecipes(newFavoriteRecipes);
+  };
+
   return (
     foodOrDrink && (
       <div className="container-detail-page app-container pb-5">
@@ -123,6 +187,33 @@ function RecipeDetails() {
             alt={ foodOrDrink === FOOD ? meals.strMeal : drinks.strDrink }
             data-testid="recipe-photo"
           />
+        </div>
+        <div>
+          <button
+            type="button"
+            onClick={ handleShare }
+            className="d-flex align-items-center
+              justify-content-center button-share-icon"
+          >
+            <img
+              src={ shareIcon }
+              alt="Share Icon"
+              data-testid="share-btn"
+            />
+          </button>
+          {linkIsCopied && <p className="msg-copy">Link copied!</p>}
+
+          <button
+            type="button"
+            onClick={ handleFavorite }
+            className="button-favorite-icon"
+          >
+            <img
+              src={ recipeIsFavorited ? blackHeartIcon : whiteHeartIcon }
+              alt="Favorite Icon"
+              data-testid="favorite-btn"
+            />
+          </button>
         </div>
         <div>
           <h1 data-testid="recipe-title">
@@ -189,7 +280,6 @@ function RecipeDetails() {
             data-testid="start-recipe-btn"
             onClick={ handleStartRecipe }
           >
-            {console.log(recipeIsInProgress)}
             { recipeIsInProgress ? 'Continue Recipe' : 'Start Recipe' }
           </button>
 
