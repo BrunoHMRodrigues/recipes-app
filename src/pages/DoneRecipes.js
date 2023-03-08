@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import CardFilters from '../components/CardFilters';
 import CardRecipe from '../components/CardRecipe';
 import './DoneRecipes.css';
 
@@ -31,45 +32,10 @@ import './DoneRecipes.css';
 function DoneRecipes() {
   const [filterBy, setFilterBy] = useState('all');
 
-  const handleFilters = ({ target }) => {
-    const { name } = target;
-    setFilterBy(name);
-  };
-
   const getDoneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
   return (
-    <div className="d-flex flex-column justify-content-center">
-      <div className="d-flex justify-content-evenly">
-        <button
-          type="button"
-          data-testid="filter-by-all-btn"
-          className="filter-button-done-recipes"
-          onClick={ handleFilters }
-          name="all"
-        >
-          All
-        </button>
-
-        <button
-          type="button"
-          data-testid="filter-by-meal-btn"
-          className="filter-button-done-recipes"
-          onClick={ handleFilters }
-          name="meal"
-        >
-          Meals
-        </button>
-
-        <button
-          type="button"
-          data-testid="filter-by-drink-btn"
-          className="filter-button-done-recipes"
-          onClick={ handleFilters }
-          name="drink"
-        >
-          Drinks
-        </button>
-      </div>
+    <div className="d-flex flex-column justify-content-center align-items-center">
+      <CardFilters setFilterBy={ setFilterBy } />
 
       {
         getDoneRecipes
@@ -80,13 +46,6 @@ function DoneRecipes() {
             key={ recipe.id }
           />))
       }
-
-      {/* {getDoneRecipes.map((recipe, index) => (<CardRecipe
-        recipe={ recipe }
-        index={ index }
-        key={ recipe.id }
-      />))} */}
-
     </div>
   );
 }

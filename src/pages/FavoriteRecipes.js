@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import CardRecipe from '../components/CardRecipe';
+import CardFilters from '../components/CardFilters';
 
 // const favoriteRecipes = [
 //   {
@@ -30,47 +31,12 @@ import CardRecipe from '../components/CardRecipe';
 function FavoriteRecipes() {
   const [filterBy, setFilterBy] = useState('all');
 
-  const handleFilters = ({ target }) => {
-    const { name } = target;
-    setFilterBy(name);
-  };
-
   const localFavoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
   const [favoriteRecipes, setFavoriteRecipes] = useState(localFavoriteRecipes);
 
   return (
-    <div className="d-flex flex-column justify-content-center">
-      <div className="d-flex justify-content-evenly">
-        <button
-          type="button"
-          data-testid="filter-by-all-btn"
-          className="filter-button-done-recipes"
-          onClick={ handleFilters }
-          name="all"
-        >
-          All
-        </button>
-
-        <button
-          type="button"
-          data-testid="filter-by-meal-btn"
-          className="filter-button-done-recipes"
-          onClick={ handleFilters }
-          name="meal"
-        >
-          Meals
-        </button>
-
-        <button
-          type="button"
-          data-testid="filter-by-drink-btn"
-          className="filter-button-done-recipes"
-          onClick={ handleFilters }
-          name="drink"
-        >
-          Drinks
-        </button>
-      </div>
+    <div className="d-flex flex-column justify-content-center align-items-center">
+      <CardFilters setFilterBy={ setFilterBy } />
 
       {
         favoriteRecipes

@@ -87,7 +87,7 @@ function RecipeDetails() {
 
   return (
     foodOrDrink && (
-      <div className="container-detail-page">
+      <div className="container-detail-page app-container pb-5">
         <div className="recipe-photo">
           <img
             src={ foodOrDrink === FOOD ? meals.strMealThumb : drinks.strDrinkThumb }
@@ -107,37 +107,52 @@ function RecipeDetails() {
           </p>
         </div>
         <div>
-          <h3>Ingredientes:</h3>
-          {list().map((ingredient, index) => (
-            <CardIngredient
-              ingredient={ ingredient.ingredient }
-              measure={ ingredient.measure }
-              index={ index }
-              key={ index }
-            />
-          ))}
+          <h3 className="subtitle-details">Ingredientes:</h3>
+          <div className="container-ingredients font-14 height-ingredient">
+            {list().map((ingredient, index) => (
+              <CardIngredient
+                ingredient={ ingredient.ingredient }
+                measure={ ingredient.measure }
+                index={ index }
+                key={ index }
+              />
+            ))}
+          </div>
         </div>
-        <article data-testid="instructions">
-          {
-            foodOrDrink === FOOD ? meals.strInstructions : drinks.strInstructions
-          }
+        <div>
+          <h3 className="subtitle-details">Instructions:</h3>
+          <article
+            data-testid="instructions"
+            className="container-ingredients font-14 p-3 height-instructions"
+          >
+            {
+              foodOrDrink === FOOD ? meals.strInstructions : drinks.strInstructions
+            }
 
-        </article>
+          </article>
+        </div>
         {foodOrDrink === FOOD
         && (
-          <iframe
-          // frameBorder="0"
-            allow="accelerometer;
+          <div>
+            <h3 className="subtitle-details">Video:</h3>
+            <iframe
+              // frameBorder="0"
+              allow="accelerometer;
             clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            width="320"
-            height="240"
-            title={ `videoYoutube ${meals.strMeal}` }
-            src={ meals.strYoutube }
-            data-testid="video"
-          />
+              allowFullScreen
+              width="320"
+              height="240"
+              title={ `videoYoutube ${meals.strMeal}` }
+              src={ meals.strYoutube }
+              data-testid="video"
+            />
+          </div>
         )}
         {/* Espaço para recomendações  */}
+        <div>
+          <h3 className="subtitle-details">Recommended:</h3>
+
+        </div>
         {!recipeIsDone && (
           <button
             className="btn-start-recipe"

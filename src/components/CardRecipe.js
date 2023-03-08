@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
-import clipboardCopy from 'clipboard-copy';
-import CardTags from './CardTags';
-import shareIcon from '../images/shareIcon.svg';
-import favoriteIcon from '../images/blackHeartIcon.svg';
+// import { useHistory } from 'react-router-dom';
+// import clipboardCopy from 'clipboard-copy';
+// import CardTags from './CardTags';
+// import shareIcon from '../images/yellowShareIcon.png';
+// import heartIcon from '../images/heartIcon.png';
 import './CardRecipe.css';
+import '../styles/genericStyles.css';
+import CardRecipeInfos from './CardRecipeInfos';
 
 function CardRecipe({ recipe, index, setFavoriteRecipes }) {
   const {
@@ -18,35 +20,37 @@ function CardRecipe({ recipe, index, setFavoriteRecipes }) {
     image,
     doneDate,
     tags } = recipe;
-  const history = useHistory();
+
+  // const history = useHistory();
   const [linkIsCopied, setLinkIsCopied] = useState(false);
+
+  // const donePath = '/done-recipes';
 
   // const [favoriteRecipes, setFavoriteRecipes] = useState();
 
-  const handleShare = () => {
-    const copy = clipboardCopy;
-    const linkToShare = `http://localhost:3000/${type}s/${id}`;
-    copy(linkToShare);
-    setLinkIsCopied(true);
-  };
+  // const handleShare = () => {
+  //   const copy = clipboardCopy;
+  //   const linkToShare = `http://localhost:3000/${type}s/${id}`;
+  //   copy(linkToShare);
+  //   setLinkIsCopied(true);
+  // };
 
-  const handleUnfavorite = ({ target }) => {
-    const { id: idRecipe } = target;
-    console.log(idRecipe);
-    const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
-    const newFavoriteRecipes = favoriteRecipes
-      .filter((getRecipe) => Number(getRecipe.id) !== Number(idRecipe));
-    localStorage.setItem('favoriteRecipes', JSON.stringify(newFavoriteRecipes));
-    setFavoriteRecipes(newFavoriteRecipes);
-  };
+  // const handleUnfavorite = ({ target }) => {
+  //   const { id: idRecipe } = target;
+  //   const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+  //   const newFavoriteRecipes = favoriteRecipes
+  //     .filter((getRecipe) => Number(getRecipe.id) !== Number(idRecipe));
+  //   localStorage.setItem('favoriteRecipes', JSON.stringify(newFavoriteRecipes));
+  //   setFavoriteRecipes(newFavoriteRecipes);
+  // };
 
-  const { location: { pathname } } = history;
+  // const { location: { pathname } } = history;
 
   return (
     <div
       data-testid="container-recipes"
-      className="d-flex align-items-start
-    justify-content-between m-2 container-recipes"
+      className="d-flex justify-content-start align-items-center
+    m-2 container-recipes"
     >
       <a href={ `/${type}s/${id}` } className="detail-recipe-image">
         <img
@@ -56,74 +60,97 @@ function CardRecipe({ recipe, index, setFavoriteRecipes }) {
           className="w-100 h-100"
         />
       </a>
-      <div className="container-recipes-info">
-        <a href={ `/${type}s/${id}` }>
-          <p data-testid={ `${index}-horizontal-name` }>{name}</p>
-        </a>
 
-        <p
-          data-testid={ `${index}-horizontal-top-text` }
-        >
-          {type === 'meal' ? `${nationality} - ${category}` : alcoholicOrNot}
-        </p>
+      <CardRecipeInfos
+        index={ index }
+        id={ id }
+        name={ name }
+        type={ type }
+        nationality={ nationality }
+        category={ category }
+        alcoholicOrNot={ alcoholicOrNot }
+        doneDate={ doneDate }
+        tags={ tags }
+        linkIsCopied={ linkIsCopied }
+        setLinkIsCopied={ setLinkIsCopied }
+        setFavoriteRecipes={ setFavoriteRecipes }
+      />
+      {/* <div className={ pathname === donePath ? 'done-info' : 'favorite-info' }>
+        <div className="container-recipe-info">
+          <a href={ `/${type}s/${id}` }>
+            <p
+              data-testid={ `${index}-horizontal-name` }
+              className="recipe-name text-center m-2"
+            >
+              {name}
+            </p>
+          </a>
 
-        {pathname === '/done-recipes' && (
-          <p data-testid={ `${index}-horizontal-done-date` }>{doneDate}</p>
-        )}
-
-        { (type === 'meal' && pathname === '/done-recipes') && (
-          <section className="d-flex">
-            {tags
-              .map((tag) => (<CardTags
-                tag={ tag }
-                index={ index }
-                key={ tag }
-              />))}
-          </section>
-        )}
-      </div>
-      {/* <button
-        type="button"
-        src={ shareIcon.image }
-        alt="Share Icon"
-        data-testid={ `${index}-horizontal-share-btn` }
-        onClick={ handleShare }
-        className="d-flex align-items-center justify-content-center share-icon"
-      /> */}
-      <div>
-        <div className="container-share">
-          <button
-            type="button"
-            // data-testid={ `${index}-horizontal-share-btn` }
-            onClick={ handleShare }
-            className="d-flex align-items-center justify-content-center button-share-icon"
+          <p
+            data-testid={ `${index}-horizontal-top-text` }
+            className="recipe-category"
           >
-            <img
-              src={ shareIcon }
-              alt="Share Icon"
-              data-testid={ `${index}-horizontal-share-btn` }
-              className="share-icon"
-            />
-          </button>
-          {linkIsCopied && <p className="msg-copy">Link copied!</p>}
+            {type === 'meal' ? `${nationality} - ${category}` : alcoholicOrNot}
+          </p>
+
+          {pathname === donePath && (
+            <p
+              data-testid={ `${index}-horizontal-done-date` }
+              className="done-date"
+            >
+              {`done in: ${doneDate}`}
+            </p>
+          )}
+
+          { (type === 'meal' && pathname === donePath) && (
+            <section className="d-flex">
+              {tags
+                .map((tag) => (<CardTags
+                  tag={ tag }
+                  index={ index }
+                  key={ tag }
+                />))}
+            </section>
+          )}
         </div>
-        {history.location.pathname === '/favorite-recipes' && (
-          <button
-            type="button"
-            onClick={ handleUnfavorite }
-            id={ id }
-            className="button-favorite-icon"
-          >
-            <img
-              src={ favoriteIcon }
-              alt="Favorite Icon"
-              id={ id }
-              data-testid={ `${index}-horizontal-favorite-btn` }
-            />
-          </button>
-        )}
 
-      </div>
+        <div className="container-recipe-icons">
+          <div className="container-share">
+            <button
+              type="button"
+              // data-testid={ `${index}-horizontal-share-btn` }
+              onClick={ handleShare }
+              className="d-flex align-items-center
+              justify-content-center button-share-icon"
+            >
+              <img
+                src={ shareIcon }
+                alt="Share Icon"
+                data-testid={ `${index}-horizontal-share-btn` }
+                // className="share-icon"
+              />
+            </button>
+            {linkIsCopied && <p className="msg-copy">Link copied!</p>}
+          </div>
+          {history.location.pathname === '/favorite-recipes' && (
+            <button
+              type="button"
+              onClick={ handleUnfavorite }
+              id={ id }
+              className="button-favorite-icon"
+            >
+              <img
+                src={ heartIcon }
+                alt="Favorite Icon"
+                id={ id }
+                data-testid={ `${index}-horizontal-favorite-btn` }
+              />
+            </button>
+          )}
+
+        </div>
+
+      </div> */}
     </div>
   );
 }
