@@ -30,11 +30,13 @@ function RecipeDetails() {
   }, [idReceita, dispatch, history]);
 
   const [recipeIsDone, setRecipesDone] = useState(false);
+  const [recipeIsInProgress, setRecipeIsInProgress] = useState(false);
 
   const { meals, drinks } = useSelector((state) => state.recipeReducer);
 
   useEffect(() => {
     const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
+    const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
     const target = foodOrDrink === FOOD ? meals : drinks;
     if (doneRecipes > 0 && target) {
       for (let index = 0; index < doneRecipes.length; index += 1) {
@@ -43,6 +45,16 @@ function RecipeDetails() {
         }
       }
       setRecipesDone(true);
+    }
+
+    if (foodOrDrink === FOOD && inProgressRecipes && inProgressRecipes.meals
+      && Object.keys(inProgressRecipes.meals).includes(target.id)) {
+      setRecipeIsInProgress(true);
+    }
+
+    if (foodOrDrink === DRINK && inProgressRecipes && inProgressRecipes.drinks
+      && Object.keys(inProgressRecipes.drinks).includes(target.id)) {
+      setRecipeIsInProgress(true);
     }
   }, [drinks, foodOrDrink, meals]);
 
@@ -67,6 +79,11 @@ function RecipeDetails() {
   if (meals === null && drinks === null) {
     return <h1>Carregando...</h1>;
   }
+
+  const handleStartRecipe = () => {
+    const { location: { pathname } } = history;
+    history.push(`${pathname}/in-progress`);
+  };
 
   return (
     foodOrDrink && (
@@ -141,8 +158,9 @@ function RecipeDetails() {
             className="btn-start-recipe"
             type="button"
             data-testid="start-recipe-btn"
+            onClick={ handleStartRecipe }
           >
-            Start Recipe
+            { recipeIsInProgress ? 'Continue Recipe' : 'Start Recipe' }
           </button>
 
         )}
