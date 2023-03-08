@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import clipboardCopy from 'clipboard-copy';
 import CardTags from './CardTags';
-import shareIcon from '../images/yellowShareIcon.png';
-import heartIcon from '../images/heartIcon.png';
+// import shareIcon from '../images/yellowShareIcon.png';
+// import heartIcon from '../images/heartIcon.png';
+import shareIcon from '../images/shareIcon.svg';
+import heartIcon from '../images/blackHeartIcon.svg';
 import '../styles/genericStyles.css';
 import './CardRecipe.css';
 
