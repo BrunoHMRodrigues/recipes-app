@@ -6,6 +6,13 @@ import { fetchDrinks, fetchMeals } from '../redux/actions/detailsAction';
 import CardIngredient from '../components/CardIngredient';
 import './RecipeDetails.css';
 
+// const inProgressRecipes = {
+//   meals: {
+//     52770: [],
+//   },
+// };
+// localStorage.setItem('inProgressRecipes', JSON.stringify(inProgressRecipes));
+
 function RecipeDetails() {
   const [foodOrDrink, setFoodOrDrink] = useState('');
   const FOOD = 'Meal';
@@ -34,28 +41,50 @@ function RecipeDetails() {
 
   const { meals, drinks } = useSelector((state) => state.recipeReducer);
 
+  const checkRecipeIsDone = (doneRecipes, target) => {
+    if (doneRecipes) {
+      return doneRecipes.some((recipe) => recipe.id === target.id);
+    }
+    return false;
+  };
+
   useEffect(() => {
     const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
     const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
     const target = foodOrDrink === FOOD ? meals : drinks;
-    if (doneRecipes > 0 && target) {
-      for (let index = 0; index < doneRecipes.length; index += 1) {
-        if (doneRecipes[index].id === target.id) {
-          setRecipesDone(true);
+
+    const checkRecipeIsInProgress = () => {
+      if (inProgressRecipes && target) {
+        if (foodOrDrink === FOOD && inProgressRecipes.meals) {
+          return Object.keys(inProgressRecipes.meals).includes(target.idMeal);
+        }
+        if (foodOrDrink === DRINK && inProgressRecipes.drinks) {
+          return Object.keys(inProgressRecipes.drinks).includes(target.idDrink);
         }
       }
-      setRecipesDone(true);
-    }
+      return false;
+    };
 
-    if (foodOrDrink === FOOD && inProgressRecipes && inProgressRecipes.meals
-      && Object.keys(inProgressRecipes.meals).includes(target.id)) {
-      setRecipeIsInProgress(true);
-    }
+    // if (doneRecipes > 0 && target) {
+    //   for (let index = 0; index < doneRecipes.length; index += 1) {
+    //     if (doneRecipes[index].id === target.id) {
+    //       setRecipesDone(true);
+    //     }
+    //   }
+    //   setRecipesDone(true);
+    // }
 
-    if (foodOrDrink === DRINK && inProgressRecipes && inProgressRecipes.drinks
-      && Object.keys(inProgressRecipes.drinks).includes(target.id)) {
-      setRecipeIsInProgress(true);
-    }
+    // if (target && foodOrDrink === FOOD && inProgressRecipes && inProgressRecipes.meals
+    //   && Object.keys(inProgressRecipes.meals).includes(target.idMeal)) {
+    //   setRecipeIsInProgress(true);
+    // }
+
+    // if (target && foodOrDrink === DRINK && inProgressRecipes && inProgressRecipes.drinks
+    //   && Object.keys(inProgressRecipes.drinks).includes(target.idDrink)) {
+    //   setRecipeIsInProgress(true);
+    // }
+    setRecipesDone(checkRecipeIsDone(doneRecipes, target));
+    setRecipeIsInProgress(checkRecipeIsInProgress());
   }, [drinks, foodOrDrink, meals]);
 
   // list é uma função auxiliar que itera sobre os atributos strIngredient1, strIngredient2, ..., strIngredient20 do objeto meals e extrai os ingredientes da receita em um array. Essa função é utilizada posteriormente para renderizar a lista de ingredientes na página.
@@ -160,6 +189,7 @@ function RecipeDetails() {
             data-testid="start-recipe-btn"
             onClick={ handleStartRecipe }
           >
+            {console.log(recipeIsInProgress)}
             { recipeIsInProgress ? 'Continue Recipe' : 'Start Recipe' }
           </button>
 
