@@ -6,6 +6,13 @@ import { fetchDrinks, fetchMeals } from '../redux/actions/detailsAction';
 import CardIngredient from '../components/CardIngredient';
 import './RecipeDetails.css';
 
+// const inProgressRecipes = {
+//   drinks: {
+//     11008: [],
+//   },
+// };
+// localStorage.setItem('inProgressRecipes', JSON.stringify(inProgressRecipes));
+
 function RecipeDetails() {
   const [foodOrDrink, setFoodOrDrink] = useState('');
   const FOOD = 'Meal';
@@ -103,7 +110,6 @@ function RecipeDetails() {
             {
               foodOrDrink === FOOD ? meals.strCategory : drinks.strAlcoholic
             }
-
           </p>
         </div>
         <div>
