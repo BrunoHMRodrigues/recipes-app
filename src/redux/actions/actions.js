@@ -41,13 +41,11 @@ export const saveCategories = (payload) => ({
 });
 
 export const fetchCategories = (foodType) => async (dispatch) => {
-  console.log('buscando');
   const API = foodType === 'meals' ? 'themealdb' : 'thecocktaildb';
   const URL = `https://www.${API}.com/api/json/v1/1/list.php?c=list`;
   try {
     const response = await fetch(URL);
     const data = await response.json();
-    console.log(data);
     dispatch(saveCategories(data[foodType]));
   } catch (error) {
     console.log(error);

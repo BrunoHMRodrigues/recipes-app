@@ -4,6 +4,7 @@ import { useHistory, useLocation, Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { fetchByCategory, fetchFood, fetchCategories } from '../redux/actions/actions';
+import './recipes.css';
 
 export default function Meals() {
   const foods = useSelector((state) => state.recipes.foods) || [];
@@ -32,60 +33,64 @@ export default function Meals() {
   return (
     <>
       {!pathname.includes('/drinks/') && <Header />}
-      {categories.map(({ strCategory: category }, index) => {
-        const MAX_LENGTH = 5;
-        if (index < MAX_LENGTH) {
-          return (
-            <button
-              type="button"
-              data-testid={ `${category}-category-filter` }
-              key={ category }
-              onClick={
-                (searchedByCategory === category)
-                  ? () => {
-                    setSearchedByCategory('');
-                    dispatch(fetchFood({ foodType, endPoint: 's' }));
-                  }
-                  : (() => {
-                    setSearchedByCategory(category);
-                    dispatch(fetchByCategory({ foodType, category }));
-                  })
-              }
-            >
-              {category}
-            </button>
-          );
-        }
-        return null;
-      })}
-      <button
-        type="button"
-        data-testid="All-category-filter"
-        onClick={ () => dispatch(fetchFood({ foodType, endPoint: 's' })) }
-      >
-        All
-      </button>
-      {foods.map((food, index) => {
-        const MAX_LENGTH = 12;
-        if (index < MAX_LENGTH) {
-          return (
-            <Link
-              to={ `meals/${food.idMeal}` }
-              key={ food.idMeal }
-              data-testid={ `${index}-recipe-card` }
-            >
-              <img
-                src={ food.strMealThumb }
-                alt=""
-                style={ { width: '40px' } }
-                data-testid={ `${index}-card-img` }
-              />
-              <p data-testid={ `${index}-card-name` }>{food.strMeal}</p>
-            </Link>
-          );
-        }
-        return null;
-      })}
+      <div className="padding">
+        {categories.map(({ strCategory: category }, index) => {
+          const MAX_LENGTH = 5;
+          if (index < MAX_LENGTH) {
+            return (
+              <button
+                type="button"
+                data-testid={ `${category}-category-filter` }
+                key={ category }
+                onClick={
+                  (searchedByCategory === category)
+                    ? () => {
+                      setSearchedByCategory('');
+                      dispatch(fetchFood({ foodType, endPoint: 's' }));
+                    }
+                    : (() => {
+                      setSearchedByCategory(category);
+                      dispatch(fetchByCategory({ foodType, category }));
+                    })
+                }
+              >
+                {category}
+              </button>
+            );
+          }
+          return null;
+        })}
+        <button
+          type="button"
+          data-testid="All-category-filter"
+          onClick={ () => dispatch(fetchFood({ foodType, endPoint: 's' })) }
+        >
+          All
+        </button>
+      </div>
+      <div className="padding">
+        {foods.map((food, index) => {
+          const MAX_LENGTH = 12;
+          if (index < MAX_LENGTH) {
+            return (
+              <Link
+                to={ `meals/${food.idMeal}` }
+                key={ food.idMeal }
+                data-testid={ `${index}-recipe-card` }
+              >
+                <img
+                  src={ food.strMealThumb }
+                  alt=""
+                  style={ { width: '40px' } }
+                  data-testid={ `${index}-card-img` }
+                />
+                <p data-testid={ `${index}-card-name` }>{food.strMeal}</p>
+              </Link>
+            );
+          }
+          return null;
+        })}
+      </div>
       {!pathname.includes('/meals/') && <Footer />}
     </>
   );
