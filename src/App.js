@@ -3,25 +3,24 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Route, Switch } from 'react-router-dom';
 import Login from './pages/Login';
-import Header from './components/Header';
-import Meals from './pages/Meals';
-import Recipe from './pages/Recipe';
-import Drinks from './pages/Drinks';
-import Footer from './components/Footer';
+import RecipeDetails from './pages/RecipeDetails';
+import RecipeInProgress from './pages/RecipeInProgress';
+import DoneRecipes from './pages/DoneRecipes';
+import Profile from './pages/Profile';
+import FavoriteRecipes from './pages/FavoriteRecipes';
 
 function App() {
   return (
-    <div className="meals">
-      <Header />
-      <Switch>
-        <Route path="/drinks/:id" component={ Recipe } />
-        <Route path="/drinks" component={ Drinks } />
-        <Route path="/meals/:id" component={ Recipe } />
-        <Route path="/meals" component={ Meals } />
-        <Route exact path="/" component={ Login } />
-      </Switch>
-      <Footer />
-    </div>
+    <Switch>
+      <Route exact path="/" component={ Login } />
+      <Route path="/meals/:idReceita" component={ RecipeDetails } />
+      <Route path="/drinks/:idReceita" component={ RecipeDetails } />
+      <Route path="/meals/:idReceita/in-progress" component={ RecipeInProgress } />
+      <Route path="/drinks/:idReceita/in-progress" component={ RecipeInProgress } />
+      <Route path="/done-recipes" component={ DoneRecipes } />
+      <Route path="/profile" component={ Profile } />
+      <Route path="/favorite-recipes" component={ FavoriteRecipes } />
+    </Switch>
   );
 }
 
