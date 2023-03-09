@@ -1,18 +1,20 @@
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { useHistory, useLocation } from 'react-router-dom';
-import Footer from '../components/Footer';
-import Header from '../components/Header';
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useHistory, useLocation, Link } from 'react-router-dom';
+import { fetchFood, fetchCategories, fetchByCategory } from '../redux/actions/actions';
 
 export default function Drinks() {
   const foods = useSelector((state) => state.recipes.foods) || [];
+  const categories = useSelector((state) => state.recipes.categories) || [];
   const searched = useSelector((state) => state.recipes.searched);
+  const { pathname } = useLocation();
+  const foodType = pathname === '/meals' ? 'meals' : 'drinks';
+  const [searchedByCategory, setSearchedByCategory] = useState('');
   const history = useHistory();
-  const location = useLocation();
-  const { pathname } = location;
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (foods.length === 1) {
+    if (searched && foods.length === 1) {
       history.push(`/drinks/${foods[0].idDrink}`);
     }
     if (searched && foods.length === 0) {
@@ -20,14 +22,55 @@ export default function Drinks() {
     }
   }, [foods]);
 
+  useEffect(() => {
+    dispatch(fetchFood({ foodType, endPoint: 's' }));
+    dispatch(fetchCategories(foodType));
+  }, []);
+
   return (
     <>
-      {!pathname.includes('/drinks/') && <Header />}
-      { foods.map((food, index) => {
+      {categories.map(({ strCategory: category }, index) => {
+        const MAX_LENGTH = 5;
+        if (index < MAX_LENGTH) {
+          return (
+            <button
+              type="button"
+              data-testid={ `${category}-category-filter` }
+              key={ category }
+              onClick={
+                (searchedByCategory === category)
+                  ? () => {
+                    setSearchedByCategory('');
+                    dispatch(fetchFood({ foodType, endPoint: 's' }));
+                  }
+                  : (() => {
+                    setSearchedByCategory(category);
+                    dispatch(fetchByCategory({ foodType, category }));
+                  })
+              }
+            >
+              {category}
+            </button>
+          );
+        }
+        return null;
+      })}
+      <button
+        type="button"
+        data-testid="All-category-filter"
+        onClick={ () => dispatch(fetchFood({ foodType, endPoint: 's' })) }
+      >
+        All
+      </button>
+      {foods.map((food, index) => {
         const MAX_LENGTH = 12;
         if (index < MAX_LENGTH) {
           return (
-            <div key={ food.idDrink } data-testid={ `${index}-recipe-card` }>
+            <Link
+              to={ `drinks/${food.idDrink}` }
+              key={ food.idDrink }
+              data-testid={ `${index}-recipe-card` }
+            >
               <img
                 src={ food.strDrinkThumb }
                 alt=""
@@ -35,12 +78,11 @@ export default function Drinks() {
                 data-testid={ `${index}-card-img` }
               />
               <p data-testid={ `${index}-card-name` }>{food.strDrink}</p>
-            </div>
+            </Link>
           );
         }
         return null;
       })}
-      {!pathname.includes('/drinks/') && <Footer />}
     </>
   );
 }
