@@ -1,0 +1,19 @@
+.container-button-filter {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-button-recipes {
+  background-color: transparent;
+  border: 2.668px solid #fcc436;
+  border-radius: 100%;
+  height: 66px;
+  width: 66px;
+}
+
+.container-button-filter label {
+  color: #797d86;
+  font-size: 9px;
+  margin: 5px;
+}

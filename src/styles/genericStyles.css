@@ -1,0 +1,33 @@
+.app-container {
+  align-items: center;
+  background-color: whitesmoke;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100vw;
+}
+
+.container-icon {
+  align-items: center;
+  border: 1.548px solid #fcc436;
+  border-radius: 100%;
+  display: flex;
+  height: 38px;
+  justify-content: center;
+  width: 38px;
+}
+
+.done-info {
+  display: flex;
+}
+
+.favorite-info {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 35%;
+}
+
+.font-14 {
+  font-size: 14px;
+}

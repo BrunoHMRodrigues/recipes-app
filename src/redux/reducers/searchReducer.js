@@ -1,11 +1,9 @@
-import { CATEGORIES, SEARCH } from '../actions/actionTypes';
+import { SEARCH } from '../actions/actionTypes';
 
-const recipes = (state = {}, { type, payload, searched }) => {
+const recipes = (state = {}, { type, payload }) => {
   switch (type) {
   case SEARCH:
-    return ({ ...state, foods: payload, searched });
-  case CATEGORIES:
-    return ({ ...state, categories: payload });
+    return ({ ...state, foods: payload, searched: true });
   default:
     return state;
   }

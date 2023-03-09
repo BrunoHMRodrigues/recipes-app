@@ -1,0 +1,31 @@
+.profile-email {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+}
+
+.container-profile-button {
+  align-items: center;
+  display: flex;
+  margin: 10px;
+}
+
+.profile-button {
+  background-color: transparent;
+  border: none;
+  color: #797d86;
+  font-size: 20px;
+  height: min-content;
+  margin-left: 10px;
+}
+
+.app-container hr {
+  border: 0.5px solid #b1b1b1;
+  height: 0;
+  width: 290px;
+}
+
+.check-icon {
+  height: 20px;
+}
