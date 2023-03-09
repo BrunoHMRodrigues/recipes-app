@@ -21,12 +21,7 @@ function App() {
         <Route path="/drinks" component={ Drinks } />
         <Route path="/meals" component={ Meals } />
 
-        {/* esses dois abaixo sao a mesma rota fazendo coisas diferentes */}
-        {/* <Route path="/meals/:id" component={ Recipe } /> */}
         <Route path="/meals/:idReceita" component={ RecipeDetails } />
-
-        {/* esses dois abaixo sao a mesma rota fazendo coisas diferentes */}
-        {/* <Route path="/drinks/:id" component={ Recipe } /> */}
         <Route path="/drinks/:idReceita" component={ RecipeDetails } />
 
         <Route path="/meals/:idReceita/in-progress" component={ RecipeInProgress } />
