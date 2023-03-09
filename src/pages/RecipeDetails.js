@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { act } from 'react-dom/test-utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
@@ -8,8 +8,8 @@ import './RecipeDetails.css';
 import CardDetailsIcons from '../components/CardDetailsIcons';
 
 // const inProgressRecipes = {
-//   meals: {
-//     52770: [],
+//   drinks: {
+//     11008: [],
 //   },
 // };
 // localStorage.setItem('inProgressRecipes', JSON.stringify(inProgressRecipes));
@@ -36,19 +36,31 @@ function RecipeDetails() {
     }
   }, [idReceita, dispatch, history]);
 
-  const [recipeIsDone, setRecipesDone] = useState(false);
+  const [recipeIsDone, setRecipeIsDone] = useState(false);
   const [recipeIsInProgress, setRecipeIsInProgress] = useState(false);
   const [linkIsCopied, setLinkIsCopied] = useState(false);
   const [recipeIsFavorited, setRecipeIsFavorited] = useState(false);
 
   const { meals, drinks } = useSelector((state) => state.recipeReducer);
 
-  const checkRecipeIsDone = (doneRecipes, target) => {
+  // const checkRecipeIsDone = (doneRecipes, target) => {
+  //   if (doneRecipes && target) {
+  //     return doneRecipes
+  //       .some((recipe) => Number(recipe.id) === Number(
+  //         foodOrDrink === FOOD ? target.idMeal : target.idDrink,
+  //       ));
+  //   }
+  //   return false;
+  // };
+
+  const checkRecipeIsDone = useCallback((doneRecipes, target) => {
     if (doneRecipes && target) {
-      return doneRecipes.some((recipe) => recipe.id === target.id);
+      return doneRecipes.some((recipe) => Number(recipe.id) === Number(
+        foodOrDrink === FOOD ? target.idMeal : target.idDrink,
+      ));
     }
     return false;
-  };
+  }, [foodOrDrink]);
 
   useEffect(() => {
     const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
@@ -67,9 +79,9 @@ function RecipeDetails() {
       return false;
     };
 
-    setRecipesDone(checkRecipeIsDone(doneRecipes, target));
+    setRecipeIsDone(checkRecipeIsDone(doneRecipes, target));
     setRecipeIsInProgress(checkRecipeIsInProgress());
-  }, [drinks, foodOrDrink, meals]);
+  }, [drinks, foodOrDrink, meals, checkRecipeIsDone]);
 
   useEffect(() => {
     const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
