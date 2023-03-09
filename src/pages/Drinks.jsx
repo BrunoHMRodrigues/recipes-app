@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useLocation, Link } from 'react-router-dom';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 import { fetchFood, fetchCategories, fetchByCategory } from '../redux/actions/actions';
 
 export default function Drinks() {
@@ -29,6 +31,7 @@ export default function Drinks() {
 
   return (
     <>
+      {!pathname.includes('/drinks/') && <Header />}
       {categories.map(({ strCategory: category }, index) => {
         const MAX_LENGTH = 5;
         if (index < MAX_LENGTH) {
@@ -83,6 +86,7 @@ export default function Drinks() {
         }
         return null;
       })}
+      {!pathname.includes('/meals/') && <Footer />}
     </>
   );
 }
