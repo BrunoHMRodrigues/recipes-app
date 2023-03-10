@@ -74,4 +74,11 @@ describe('Verify if Page Profile is rendering as intended', () => {
     expect(favoriteRecipes).toBe(null);
     expect(inProgressRecipes).toBe(null);
   });
+  it('Verify profile when no user saved in localStorage', () => {
+    localStorage.removeItem('user');
+    renderWithRouterAndRedux(<App />, { initialEntries });
+    const email = screen.queryByTestId('profile-email');
+    expect(email).toBeInTheDocument();
+    expect(email.textContent).toBe('');
+  });
 });
