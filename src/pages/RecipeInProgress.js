@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { act } from 'react-dom/test-utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
@@ -34,8 +34,7 @@ function RecipeInProgress() {
   const [linkIsCopied, setLinkIsCopied] = useState(false);
   const [recipeIsFavorited, setRecipeIsFavorited] = useState(false);
   const [ingredientsMarked, setIngredientsMarked] = useState([]);
-
-  const { meals, drinks } = useSelector((state) => state.recipeReducer);
+  const [allIngredientsChecked, setAllIngredientsChecked] = useState(false);
 
   // Verificar se existe algo no localStorage na chave inProgressRecipes e se não seta um valor inicial
   // Objetivo: Impedir erros caso a chave não exista no localStorage
@@ -65,20 +64,33 @@ function RecipeInProgress() {
     }
   }, [idReceita]);
 
+  const { meals, drinks } = useSelector((state) => state.recipeReducer);
+
   // Função para criar a lista de ingredientes
-  const list = () => {
-    const target = foodOrDrink === FOOD ? meals : drinks;
-    const ingredients = [];
-    const maxLength = 20;
-    for (let index = 1; index < maxLength; index += 1) {
-      const ingredient = target[`strIngredient${index}`];
-      const measure = target[`strMeasure${index}`];
-      if (ingredient) {
-        ingredients.push({ ingredient, measure });
+  const list = useCallback(() => {
+    if (foodOrDrink && (meals || drinks)) {
+      const target = foodOrDrink === FOOD ? meals : drinks;
+      const ingredients = [];
+      const maxLength = 20;
+      for (let index = 1; index < maxLength; index += 1) {
+        const ingredient = target[`strIngredient${index}`];
+        const measure = target[`strMeasure${index}`];
+        if (ingredient) {
+          ingredients.push({ ingredient, measure });
+        }
       }
+      return ingredients.filter((ingredient) => ingredient);
     }
-    return ingredients.filter((ingredient) => ingredient);
-  };
+  }, [foodOrDrink, meals, drinks]);
+
+  useEffect(() => {
+    const ingredients = list(foodOrDrink, meals, drinks);
+    if (foodOrDrink && ingredients && ingredientsMarked.length === ingredients.length) {
+      setAllIngredientsChecked(true);
+    } else {
+      setAllIngredientsChecked(false);
+    }
+  }, [list, ingredientsMarked, foodOrDrink, meals, drinks]);
 
   if (meals === null && drinks === null) {
     return <h1>Carregando...</h1>;
@@ -123,7 +135,7 @@ function RecipeInProgress() {
         <div>
           <h3 className="subtitle-details">Ingredientes:</h3>
           <div className="container-ingredients font-14 height-ingredient">
-            {list().map((ingredient, index) => (
+            {list(foodOrDrink, meals, drinks).map((ingredient, index) => (
               <CardIngredient
                 ingredient={ ingredient.ingredient }
                 measure={ ingredient.measure }
@@ -152,6 +164,7 @@ function RecipeInProgress() {
         <button
           className="btn-start-recipe"
           type="button"
+          disabled={ !allIngredientsChecked }
           data-testid="finish-recipe-btn"
           onClick={ handleFinishRecipe }
         >
