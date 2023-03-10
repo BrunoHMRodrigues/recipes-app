@@ -63,6 +63,7 @@ function CardRecipeInfos({ index, id, name, type, nationality,
         )}
 
         { (type === 'meal' && pathname === donePath) && (
+
           <section className="d-flex">
             {tags
               .map((tag) => (<CardTags

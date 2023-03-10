@@ -47,6 +47,11 @@ function RecipeInProgress() {
       };
       localStorage.setItem('inProgressRecipes', JSON.stringify(inProgressRecipes));
     }
+    let doneRecipesStored = JSON.parse(localStorage.getItem('doneRecipes'));
+    if (!doneRecipesStored && !doneRecipesStored > 0) {
+      doneRecipesStored = [];
+      localStorage.setItem('doneRecipes', JSON.stringify(doneRecipesStored));
+    }
   }, []);
 
   // Verifica se a receita esta favoritada e seta o state de acordo
@@ -97,6 +102,36 @@ function RecipeInProgress() {
   }
 
   const handleFinishRecipe = () => {
+    const doneRecipesStored = JSON.parse(localStorage.getItem('doneRecipes'));
+    if (foodOrDrink === FOOD) {
+      const newDoneRecipes = [...doneRecipesStored, {
+        id: meals.idMeal,
+        type: 'meal',
+        nationality: meals.strArea,
+        category: meals.strCategory,
+        alcoholicOrNot: '',
+        name: meals.strMeal,
+        image: meals.strMealThumb,
+        doneDate: new Date(),
+        tags: meals.strTags.split(','),
+      }];
+      console.log(newDoneRecipes);
+      localStorage.setItem('doneRecipes', JSON.stringify(newDoneRecipes));
+    }
+    if (foodOrDrink === DRINK) {
+      const newDoneRecipes = [...doneRecipesStored, {
+        id: drinks.idDrink,
+        type: 'drink',
+        nationality: '',
+        category: drinks.strCategory,
+        alcoholicOrNot: drinks.strAlcoholic,
+        name: drinks.strDrink,
+        image: drinks.strDrinkThumb,
+        doneDate: new Date(),
+        tags: [],
+      }];
+      localStorage.setItem('doneRecipes', JSON.stringify(newDoneRecipes));
+    }
     history.push('/done-recipes');
   };
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CardFilters from '../components/CardFilters';
 import CardRecipe from '../components/CardRecipe';
 import './DoneRecipes.css';
@@ -31,6 +31,14 @@ import './DoneRecipes.css';
 
 function DoneRecipes() {
   const [filterBy, setFilterBy] = useState('all');
+
+  useEffect(() => {
+    let doneRecipesStored = JSON.parse(localStorage.getItem('doneRecipes'));
+    if (!doneRecipesStored && !doneRecipesStored > 0) {
+      doneRecipesStored = [];
+      localStorage.setItem('doneRecipes', JSON.stringify(doneRecipesStored));
+    }
+  }, []);
 
   const getDoneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
   return (
