@@ -132,4 +132,11 @@ describe('Verify if page favorite-recipes is working as intended', () => {
     userEvent.click(favoriteIcons[0]);
     expect(mealImage).not.toBeInTheDocument();
   });
+  it('Verify if when localStorage is empty if it create a favoriteRecipes', async () => {
+    localStorage.removeItem('favoriteRecipes');
+    renderWithRouterAndRedux(<App />, { initialEntries });
+
+    const allFavorites = screen.queryAllByTestId('container-recipes');
+    expect(allFavorites).toHaveLength(0);
+  });
 });
