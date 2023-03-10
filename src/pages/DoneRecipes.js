@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import CardFilters from '../components/CardFilters';
 import CardRecipe from '../components/CardRecipe';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 import './DoneRecipes.css';
 
 // const doneRecipes = [
@@ -32,21 +34,26 @@ import './DoneRecipes.css';
 function DoneRecipes() {
   const [filterBy, setFilterBy] = useState('all');
 
-  const getDoneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
+  const getDoneRecipes = JSON.parse(localStorage.getItem('doneRecipes')) || [];
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center">
-      <CardFilters setFilterBy={ setFilterBy } />
+    <>
+      <Header />
+      <div className="d-flex flex-column justify-content-center align-items-center">
+        <CardFilters setFilterBy={ setFilterBy } />
 
-      {
-        getDoneRecipes
-          .filter((recipe) => (recipe.type === filterBy || filterBy === 'all'))
-          .map((recipe, index) => (<CardRecipe
-            recipe={ recipe }
-            index={ index }
-            key={ recipe.id }
-          />))
-      }
-    </div>
+        {
+          getDoneRecipes
+            .filter((recipe) => (recipe.type === filterBy || filterBy === 'all'))
+            .map((recipe, index) => (
+              <CardRecipe
+                recipe={ recipe }
+                index={ index }
+                key={ recipe.id }
+              />))
+        }
+      </div>
+      <Footer />
+    </>
   );
 }
 
