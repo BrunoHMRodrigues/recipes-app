@@ -33,49 +33,25 @@ function RecipeInProgress() {
   // const [recipeIsInProgress, setRecipeIsInProgress] = useState(false);
   const [linkIsCopied, setLinkIsCopied] = useState(false);
   const [recipeIsFavorited, setRecipeIsFavorited] = useState(false);
+  const [ingredientsMarked, setIngredientsMarked] = useState([]);
 
   const { meals, drinks } = useSelector((state) => state.recipeReducer);
 
-  // const checkRecipeIsDone = (doneRecipes, target) => {
-  //   if (doneRecipes && target) {
-  //     return doneRecipes
-  //       .some((recipe) => Number(recipe.id) === Number(
-  //         foodOrDrink === FOOD ? target.idMeal : target.idDrink,
-  //       ));
-  //   }
-  //   return false;
-  // };
+  // Verificar se existe algo no localStorage na chave inProgressRecipes e se não seta um valor inicial
+  // Objetivo: Impedir erros caso a chave não exista no localStorage
+  useEffect(() => {
+    let inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    if (!inProgressRecipes) {
+      inProgressRecipes = {
+        drinks: {},
+        meals: {},
+      };
+      localStorage.setItem('inProgressRecipes', JSON.stringify(inProgressRecipes));
+    }
+  }, []);
 
-  // const checkRecipeIsDone = useCallback((doneRecipes, target) => {
-  //   if (doneRecipes && target) {
-  //     return doneRecipes.some((recipe) => Number(recipe.id) === Number(
-  //       foodOrDrink === FOOD ? target.idMeal : target.idDrink,
-  //     ));
-  //   }
-  //   return false;
-  // }, [foodOrDrink]);
-
-  // useEffect(() => {
-  //   const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
-  //   const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
-  //   const target = foodOrDrink === FOOD ? meals : drinks;
-
-  //   const checkRecipeIsInProgress = () => {
-  //     if (inProgressRecipes && target) {
-  //       if (foodOrDrink === FOOD && inProgressRecipes.meals) {
-  //         return Object.keys(inProgressRecipes.meals).includes(target.idMeal);
-  //       }
-  //       if (foodOrDrink === DRINK && inProgressRecipes.drinks) {
-  //         return Object.keys(inProgressRecipes.drinks).includes(target.idDrink);
-  //       }
-  //     }
-  //     return false;
-  //   };
-
-  //   setRecipeIsDone(checkRecipeIsDone(doneRecipes, target));
-  //   setRecipeIsInProgress(checkRecipeIsInProgress());
-  // }, [drinks, foodOrDrink, meals, checkRecipeIsDone]);
-
+  // Verifica se a receita esta favoritada e seta o state de acordo
+  // Objetivo: renderização correta do botão de favoritar
   useEffect(() => {
     const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
     if (favoriteRecipes) {
@@ -89,6 +65,7 @@ function RecipeInProgress() {
     }
   }, [idReceita]);
 
+  // Função para criar a lista de ingredientes
   const list = () => {
     const target = foodOrDrink === FOOD ? meals : drinks;
     const ingredients = [];
@@ -107,10 +84,6 @@ function RecipeInProgress() {
     return <h1>Carregando...</h1>;
   }
 
-  // const handleStartRecipe = () => {
-  //   const { location: { pathname } } = history;
-  //   history.push(`${pathname}/in-progress`);
-  // };
   const handleFinishRecipe = () => {
     history.push('/done-recipes');
   };
@@ -156,6 +129,9 @@ function RecipeInProgress() {
                 measure={ ingredient.measure }
                 index={ index }
                 key={ index }
+                idReceita={ idReceita }
+                ingredientsMarked={ ingredientsMarked }
+                setIngredientsMarked={ setIngredientsMarked }
               />
             ))}
           </div>
@@ -181,39 +157,6 @@ function RecipeInProgress() {
         >
           FINALIZAR RECIPE
         </button>
-
-        {/* {foodOrDrink === FOOD
-        && (
-          <div>
-            <h3 className="subtitle-details">Video:</h3>
-            <iframe
-              // frameBorder="0"
-              allow="accelerometer;
-            clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              width="320"
-              height="240"
-              title={ `videoYoutube ${meals.strMeal}` }
-              src={ meals.strYoutube }
-              data-testid="video"
-            />
-          </div>
-        )} */}
-        {/* Espaço para recomendações  */}
-        {/* <div>
-          <h3 className="subtitle-details">Recommended:</h3>
-
-        </div> */}
-        {/* {!recipeIsDone && (
-          <button
-            className="btn-start-recipe"
-            type="button"
-            data-testid="start-recipe-btn"
-            onClick={ handleStartRecipe }
-          >
-            { recipeIsInProgress ? 'Continue Recipe' : 'Start Recipe' }
-          </button>
-        )} */}
       </div>
     )
   );

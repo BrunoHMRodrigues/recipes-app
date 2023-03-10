@@ -43,16 +43,8 @@ function RecipeDetails() {
 
   const { meals, drinks } = useSelector((state) => state.recipeReducer);
 
-  // const checkRecipeIsDone = (doneRecipes, target) => {
-  //   if (doneRecipes && target) {
-  //     return doneRecipes
-  //       .some((recipe) => Number(recipe.id) === Number(
-  //         foodOrDrink === FOOD ? target.idMeal : target.idDrink,
-  //       ));
-  //   }
-  //   return false;
-  // };
-
+  // Verificar se a receita já foi feita
+  // Objetivo: Alimentar o valor do setRecipeIsDone para renderização correta do botão
   const checkRecipeIsDone = useCallback((doneRecipes, target) => {
     if (doneRecipes && target) {
       return doneRecipes.some((recipe) => Number(recipe.id) === Number(
@@ -62,6 +54,8 @@ function RecipeDetails() {
     return false;
   }, [foodOrDrink]);
 
+  // Verifica se receita já foi feita ou se está em progresso e seta de acordo
+  // Objetivo: Alterar mensagem do botão de acordo ou não renderizá-lo se necessário
   useEffect(() => {
     const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
     const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
@@ -83,6 +77,20 @@ function RecipeDetails() {
     setRecipeIsInProgress(checkRecipeIsInProgress());
   }, [drinks, foodOrDrink, meals, checkRecipeIsDone]);
 
+  // Verificar se existe algo no localStorage na chave inProgressRecipes e se não seta um valor inicial
+  useEffect(() => {
+    let inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    if (!inProgressRecipes) {
+      inProgressRecipes = {
+        drinks: {},
+        meals: {},
+      };
+      localStorage.setItem('inProgressRecipes', JSON.stringify(inProgressRecipes));
+    }
+  }, []);
+
+  // Verifica se receita está favoritada e seta state de acordo
+  // Objetivo: Renderização correta do btão de favoritar
   useEffect(() => {
     const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
     if (favoriteRecipes) {
@@ -96,6 +104,7 @@ function RecipeDetails() {
     }
   }, [idReceita]);
 
+  // Função para obter a lista de ingredientes
   const list = () => {
     const target = foodOrDrink === FOOD ? meals : drinks;
     const ingredients = [];
