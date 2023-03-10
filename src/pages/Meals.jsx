@@ -4,7 +4,6 @@ import { useHistory, useLocation, Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { fetchByCategory, fetchFood, fetchCategories } from '../redux/actions/actions';
-import './recipes.css';
 
 export default function Meals() {
   const foods = useSelector((state) => state.recipes.foods) || [];
@@ -33,7 +32,7 @@ export default function Meals() {
   return (
     <>
       {!pathname.includes('/drinks/') && <Header />}
-      <div className="padding">
+      <div>
         {categories.map(({ strCategory: category }, index) => {
           const MAX_LENGTH = 5;
           if (index < MAX_LENGTH) {
