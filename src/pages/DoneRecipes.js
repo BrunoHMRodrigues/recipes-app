@@ -34,13 +34,11 @@ function DoneRecipes() {
 
   let doneRecipesStored = JSON.parse(localStorage.getItem('doneRecipes'));
   if (!doneRecipesStored) {
-    console.log('entrou');
     doneRecipesStored = [];
     localStorage.setItem('doneRecipes', JSON.stringify(doneRecipesStored));
   }
 
   const getDoneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
-  console.log(getDoneRecipes);
   return (
     <div className="d-flex flex-column justify-content-center align-items-center">
       <CardFilters setFilterBy={ setFilterBy } />
