@@ -9,36 +9,63 @@ import blackHeartIcon from '../images/blackHeartIcon.svg';
 const { strMealThumb,
   idMeal,
   strMeal,
+  strArea,
   strCategory: mealCategory,
   strIngredient1: mealIngredient,
   strMeasure1: mealMeasure,
   strInstructions: mealInstructions, strYoutube: mealYoutube } = DETAIL_API_MEAL.meals[0];
 
 const { strDrinkThumb,
-  strDrink, strAlcoholic,
-  strIngredient1: drinkIngredient, strMeasure1: drinkMeasure,
+  idDrink,
+  strDrink,
+  strCategory: drinkCategory,
+  strAlcoholic,
+  strIngredient1: drinkIngredient,
+  strMeasure1: drinkMeasure,
   strInstructions: drinkInstructions } = DETAIL_API_DRINK.drinks[0];
 
 const photoTestId = 'recipe-photo';
 const buttonTestId = 'start-recipe-btn';
+const favoriteTestid = 'favorite-btn';
 const continueRecipe = 'Continue Recipe';
 
-const testLocalStorage = [{
+const testLocalStorageMeal = [{
   id: idMeal,
   type: 'meal',
-  nationality: 'Italian',
+  nationality: strArea,
   category: mealCategory,
   alcoholicOrNot: '',
   name: strMeal,
   image: strMealThumb }];
 
+const testLocalStorageDrink = [{
+  id: idDrink,
+  type: 'drink',
+  nationality: '',
+  category: drinkCategory,
+  alcoholicOrNot: strAlcoholic,
+  name: strDrink,
+  image: strDrinkThumb }];
+
 const inProgress = { meals: { 52770: [] }, drinks: { 11007: [] } };
 
-const doneRecipes = [
+const favoritecipesMeal = [
   {
-    id: strDrink,
+    id: idMeal,
     type: 'meal',
-    nationality: 'Italian',
+    nationality: strArea,
+    category: mealCategory,
+    alcoholicOrNot: '',
+    name: strMeal,
+    image: strMealThumb,
+  },
+];
+
+const doneRecipesMeal = [
+  {
+    id: idMeal,
+    type: 'meal',
+    nationality: strArea,
     category: mealCategory,
     alcoholicOrNot: '',
     name: strMeal,
@@ -46,6 +73,25 @@ const doneRecipes = [
     tags: ['italian', 'paste'],
   },
 ];
+const doneRecipesDrink = [
+  {
+    id: idDrink,
+    type: 'drink',
+    nationality: '',
+    category: drinkCategory,
+    alcoholicOrNot: strAlcoholic,
+    name: strDrink,
+    image: strDrinkThumb,
+    tags: [],
+  },
+];
+beforeEach(() => {
+  localStorage.clear();
+  localStorage.setItem('user', JSON.stringify({ email: 'teste@teste.com' }));
+  localStorage.setItem('doneRecipes', JSON.stringify([]));
+  localStorage.setItem('favoriteRecipes', JSON.stringify([]));
+  localStorage.setItem('inProgressRecipes', JSON.stringify({ drinks: {}, meals: {} }));
+});
 
 describe('Verificar se a pagina RecipiDetails esta sendo renderizada como devido quando uma comida', () => {
   const initialEntries = ['/meals/52770'];
@@ -61,7 +107,7 @@ describe('Verificar se a pagina RecipiDetails esta sendo renderizada como devido
     expect(recipeImage).toHaveAttribute('src', strMealThumb);
     const btnShare = screen.getByTestId('share-btn');
     expect(btnShare).toBeInTheDocument();
-    const btnFavorite = screen.getByTestId('favorite-btn');
+    const btnFavorite = screen.getByTestId(favoriteTestid);
     expect(btnFavorite).toBeInTheDocument();
     const recipeName = screen.getByRole('heading', { level: 1, name: 'Spaghetti Bolognese' });
     expect(recipeName).toBeInTheDocument();
@@ -103,7 +149,7 @@ describe('Verificar se a pagina RecipiDetails esta sendo renderizada como devido
     // const clipboardContent = await navigator.clipboard.readText();
     // expect(clipboardContent).toBe('http://localhost:3000/meals/52770');
 
-    const btnFavorite = screen.getByTestId('favorite-btn');
+    const btnFavorite = screen.getByTestId(favoriteTestid);
     expect(btnFavorite).toBeInTheDocument();
     expect(btnFavorite).toHaveAttribute('src', whiteHeartIcon);
     const initialLocalStorage = JSON.parse(localStorage.getItem('favoriteRecipes')) || [];
@@ -111,8 +157,9 @@ describe('Verificar se a pagina RecipiDetails esta sendo renderizada como devido
     userEvent.click(btnFavorite);
     const newLocalStorage = JSON.parse(localStorage.getItem('favoriteRecipes')) || [];
     expect(newLocalStorage).toHaveLength(1);
-    expect(newLocalStorage).toEqual(testLocalStorage);
+    expect(newLocalStorage).toEqual(testLocalStorageMeal);
     expect(btnFavorite).toHaveAttribute('src', blackHeartIcon);
+
     const btnStartRecipe = screen.getByTestId(buttonTestId);
     expect(btnStartRecipe).toBeInTheDocument();
     userEvent.click(btnStartRecipe);
@@ -130,13 +177,13 @@ describe('Verificar se a pagina RecipiDetails esta sendo renderizada como devido
     expect(recipeImage).toBeInTheDocument();
     expect(recipeImage).toHaveAttribute('src', strMealThumb);
     const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
-    console.log(inProgressRecipes);
     expect(inProgressRecipes).toEqual(inProgress);
     const btnContinueRecipe = await screen.findByText(continueRecipe);
     expect(btnContinueRecipe).toBeInTheDocument();
   });
   it('Verifica se o botão não existe quando a receita já foi feita', async () => {
-    localStorage.setItem('doneRecipes', JSON.stringify(doneRecipes));
+    localStorage.setItem('inProgressRecipes', JSON.stringify(inProgress));
+    localStorage.setItem('doneRecipes', JSON.stringify(doneRecipesMeal));
     jest.resetAllMocks();
     jest.spyOn(global, 'fetch');
     global.fetch.mockResolvedValue({
@@ -147,10 +194,42 @@ describe('Verificar se a pagina RecipiDetails esta sendo renderizada como devido
     expect(recipeImage).toBeInTheDocument();
     expect(recipeImage).toHaveAttribute('src', strMealThumb);
     const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
-    console.log(inProgressRecipes);
     expect(inProgressRecipes).toEqual(inProgress);
     const btnContinueRecipe = await screen.queryByText(continueRecipe);
     expect(btnContinueRecipe).not.toBeInTheDocument();
+  });
+  it('Testa comportamento caso não exista chave inProgressRecipes', async () => {
+    localStorage.removeItem('inProgressRecipes');
+    jest.resetAllMocks();
+    jest.spyOn(global, 'fetch');
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue(DETAIL_API_MEAL),
+    });
+    renderWithRouterAndRedux(<App />, { initialEntries });
+    const recipeImage = await screen.findByTestId(photoTestId);
+    expect(recipeImage).toBeInTheDocument();
+    expect(recipeImage).toHaveAttribute('src', strMealThumb);
+
+    const favoriteRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    expect(favoriteRecipes).toEqual({ drinks: {}, meals: {} });
+  });
+  it('Testa se a página esta renderizando de acordo com o chave favoriteRecipes do localStorage', async () => {
+    // DEVERIA COBRIR LINHA 98 DO RECIPEDETAILS, MAS NÃO ESTÁ
+    localStorage.setItem('favoriteRecipes', JSON.stringify(favoritecipesMeal));
+    jest.resetAllMocks();
+    jest.spyOn(global, 'fetch');
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue(DETAIL_API_MEAL),
+    });
+    renderWithRouterAndRedux(<App />, { initialEntries });
+
+    const recipeImage = await screen.findByTestId(photoTestId);
+    expect(recipeImage).toBeInTheDocument();
+    expect(recipeImage).toHaveAttribute('src', strMealThumb);
+
+    const btnFavorite = await screen.findByRole('img', { name: /favorite icon/i, src: blackHeartIcon });
+    expect(btnFavorite).toBeInTheDocument();
+    expect(btnFavorite).toHaveAttribute('src', blackHeartIcon);
   });
 });
 
@@ -166,6 +245,10 @@ describe('Verificar se a pagina RecipiDetails esta sendo renderizada como devido
     const recipeImage = await screen.findByTestId(photoTestId);
     expect(recipeImage).toBeInTheDocument();
     expect(recipeImage).toHaveAttribute('src', strDrinkThumb);
+    const btnShare = screen.getByTestId('share-btn');
+    expect(btnShare).toBeInTheDocument();
+    const btnFavorite = screen.getByTestId(favoriteTestid);
+    expect(btnFavorite).toBeInTheDocument();
     const recipeName = screen.getByRole('heading', { level: 1, name: 'Margarita' });
     expect(recipeName).toBeInTheDocument();
     expect(recipeName.textContent).toBe(strDrink);
@@ -184,6 +267,7 @@ describe('Verificar se a pagina RecipiDetails esta sendo renderizada como devido
     expect(btnStartRecipe.textContent).toBe('Start Recipe');
   });
   it('Verificar se a página RecipeDetails está funcionando como deveria', async () => {
+    localStorage.removeItem('favoriteRecipes');
     jest.resetAllMocks();
     jest.spyOn(global, 'fetch');
     global.fetch.mockResolvedValue({
@@ -193,6 +277,18 @@ describe('Verificar se a pagina RecipiDetails esta sendo renderizada como devido
     const recipeImage = await screen.findByTestId(photoTestId);
     expect(recipeImage).toBeInTheDocument();
     expect(recipeImage).toHaveAttribute('src', strDrinkThumb);
+
+    const btnFavorite = screen.getByTestId(favoriteTestid);
+    expect(btnFavorite).toBeInTheDocument();
+    expect(btnFavorite).toHaveAttribute('src', whiteHeartIcon);
+    const initialLocalStorage = JSON.parse(localStorage.getItem('favoriteRecipes')) || [];
+    expect(initialLocalStorage).toEqual([]);
+    userEvent.click(btnFavorite);
+    const newLocalStorage = JSON.parse(localStorage.getItem('favoriteRecipes')) || [];
+    expect(newLocalStorage).toHaveLength(1);
+    expect(newLocalStorage).toEqual(testLocalStorageDrink);
+    expect(btnFavorite).toHaveAttribute('src', blackHeartIcon);
+
     const btnStartRecipe = screen.getByTestId(buttonTestId);
     expect(btnStartRecipe).toBeInTheDocument();
     userEvent.click(btnStartRecipe);
@@ -213,5 +309,22 @@ describe('Verificar se a pagina RecipiDetails esta sendo renderizada como devido
     expect(inProgressRecipes).toEqual(inProgress);
     const btnContinueRecipe = await screen.findByText(continueRecipe);
     expect(btnContinueRecipe).toBeInTheDocument();
+  });
+  it('Verifica se o botão não existe quando a receita já foi feita', async () => {
+    localStorage.setItem('inProgressRecipes', JSON.stringify(inProgress));
+    localStorage.setItem('doneRecipes', JSON.stringify(doneRecipesDrink));
+    jest.resetAllMocks();
+    jest.spyOn(global, 'fetch');
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue(DETAIL_API_DRINK),
+    });
+    renderWithRouterAndRedux(<App />, { initialEntries });
+    const recipeImage = await screen.findByTestId(photoTestId);
+    expect(recipeImage).toBeInTheDocument();
+    expect(recipeImage).toHaveAttribute('src', strDrinkThumb);
+    const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    expect(inProgressRecipes).toEqual(inProgress);
+    const btnContinueRecipe = screen.queryByText(continueRecipe);
+    expect(btnContinueRecipe).not.toBeInTheDocument();
   });
 });

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { act } from 'react-dom/test-utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { fetchDrinks, fetchMeals } from '../redux/actions/detailsAction';
 import CardIngredient from '../components/CardIngredient';
 import './RecipeDetails.css';
+import CardDetailsIcons from '../components/CardDetailsIcons';
 
 // const inProgressRecipes = {
 //   drinks: {
@@ -18,7 +19,6 @@ function RecipeDetails() {
   const FOOD = 'Meal';
   const DRINK = 'Drink';
 
-  // useParams serve para extrair o id da rota
   const { idReceita } = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -36,36 +36,75 @@ function RecipeDetails() {
     }
   }, [idReceita, dispatch, history]);
 
-  const [recipeIsDone, setRecipesDone] = useState(false);
+  const [recipeIsDone, setRecipeIsDone] = useState(false);
   const [recipeIsInProgress, setRecipeIsInProgress] = useState(false);
+  const [linkIsCopied, setLinkIsCopied] = useState(false);
+  const [recipeIsFavorited, setRecipeIsFavorited] = useState(false);
 
   const { meals, drinks } = useSelector((state) => state.recipeReducer);
 
+  // Verificar se a receita já foi feita
+  // Objetivo: Alimentar o valor do setRecipeIsDone para renderização correta do botão
+  const checkRecipeIsDone = useCallback((doneRecipes, target) => {
+    if (doneRecipes && target) {
+      return doneRecipes.some((recipe) => Number(recipe.id) === Number(
+        foodOrDrink === FOOD ? target.idMeal : target.idDrink,
+      ));
+    }
+    return false;
+  }, [foodOrDrink]);
+
+  // Verifica se receita já foi feita ou se está em progresso e seta de acordo
+  // Objetivo: Alterar mensagem do botão de acordo ou não renderizá-lo se necessário
   useEffect(() => {
     const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
     const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
     const target = foodOrDrink === FOOD ? meals : drinks;
-    if (doneRecipes > 0 && target) {
-      for (let index = 0; index < doneRecipes.length; index += 1) {
-        if (doneRecipes[index].id === target.id) {
-          setRecipesDone(true);
+
+    const checkRecipeIsInProgress = () => {
+      if (inProgressRecipes && target) {
+        if (foodOrDrink === FOOD && inProgressRecipes.meals) {
+          return Object.keys(inProgressRecipes.meals).includes(target.idMeal);
+        }
+        if (foodOrDrink === DRINK && inProgressRecipes.drinks) {
+          return Object.keys(inProgressRecipes.drinks).includes(target.idDrink);
         }
       }
-      setRecipesDone(true);
-    }
+      return false;
+    };
 
-    if (foodOrDrink === FOOD && inProgressRecipes && inProgressRecipes.meals
-      && Object.keys(inProgressRecipes.meals).includes(target.id)) {
-      setRecipeIsInProgress(true);
-    }
+    setRecipeIsDone(checkRecipeIsDone(doneRecipes, target));
+    setRecipeIsInProgress(checkRecipeIsInProgress());
+  }, [drinks, foodOrDrink, meals, checkRecipeIsDone]);
 
-    if (foodOrDrink === DRINK && inProgressRecipes && inProgressRecipes.drinks
-      && Object.keys(inProgressRecipes.drinks).includes(target.id)) {
-      setRecipeIsInProgress(true);
+  // Verificar se existe algo no localStorage na chave inProgressRecipes e se não seta um valor inicial
+  useEffect(() => {
+    let inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    if (!inProgressRecipes) {
+      inProgressRecipes = {
+        drinks: {},
+        meals: {},
+      };
+      localStorage.setItem('inProgressRecipes', JSON.stringify(inProgressRecipes));
     }
-  }, [drinks, foodOrDrink, meals]);
+  }, []);
 
-  // list é uma função auxiliar que itera sobre os atributos strIngredient1, strIngredient2, ..., strIngredient20 do objeto meals e extrai os ingredientes da receita em um array. Essa função é utilizada posteriormente para renderizar a lista de ingredientes na página.
+  // Verifica se receita está favoritada e seta state de acordo
+  // Objetivo: Renderização correta do btão de favoritar
+  useEffect(() => {
+    const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    if (favoriteRecipes) {
+      for (let index = 0; index < favoriteRecipes.length; index += 1) {
+        if (favoriteRecipes[index].id === idReceita) {
+          setRecipeIsFavorited(true);
+          return;
+        }
+      }
+      setRecipeIsFavorited(false);
+    }
+  }, [idReceita]);
+
+  // Função para obter a lista de ingredientes
   const list = () => {
     const target = foodOrDrink === FOOD ? meals : drinks;
     const ingredients = [];
@@ -73,15 +112,12 @@ function RecipeDetails() {
     for (let index = 1; index < maxLength; index += 1) {
       const ingredient = target[`strIngredient${index}`];
       const measure = target[`strMeasure${index}`];
-      // const measure = meals[strMeasure${index}];: Cria uma constante measure que contém o valor da chave "strMeasureX" em meals, onde X é o valor de index.
       if (ingredient) {
         ingredients.push({ ingredient, measure });
       }
     }
     return ingredients.filter((ingredient) => ingredient);
   };
-
-  // O trecho de código "if (meals === null && drinks === null)" verifica se a variável "meals" e "drinks" são nulas. Caso ambas as variáveis sejam nulas, a função retorna uma tag "h1" com o texto "Carregando...".
 
   if (meals === null && drinks === null) {
     return <h1>Carregando...</h1>;
@@ -102,6 +138,18 @@ function RecipeDetails() {
             data-testid="recipe-photo"
           />
         </div>
+        <CardDetailsIcons
+          idReceita={ idReceita }
+          meals={ meals }
+          drinks={ drinks }
+          foodOrDrink={ foodOrDrink }
+          FOOD={ FOOD }
+          DRINK={ DRINK }
+          linkIsCopied={ linkIsCopied }
+          setLinkIsCopied={ setLinkIsCopied }
+          recipeIsFavorited={ recipeIsFavorited }
+          setRecipeIsFavorited={ setRecipeIsFavorited }
+        />
         <div>
           <h1 data-testid="recipe-title">
             { foodOrDrink === FOOD ? meals.strMeal : drinks.strDrink }
@@ -168,9 +216,7 @@ function RecipeDetails() {
           >
             { recipeIsInProgress ? 'Continue Recipe' : 'Start Recipe' }
           </button>
-
         )}
-
       </div>
     )
   );

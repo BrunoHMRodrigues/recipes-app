@@ -3,7 +3,8 @@ import userEvent from '@testing-library/user-event';
 import App from '../App';
 import { renderWithRouterAndRedux } from './helpers/renderWithRouterAndRedux';
 
-const initialEntries = ['/favorite-recipes'];
+const favoriteRecipesRoute = '/favorite-recipes';
+const initialEntries = [favoriteRecipesRoute];
 const favoriteRecipes = [
   {
     id: 52770,
@@ -24,7 +25,14 @@ const favoriteRecipes = [
     image: 'https://www.thecocktaildb.com/images/media/drink/5noda61589575158.jpg',
   },
 ];
-localStorage.setItem('favoriteRecipes', JSON.stringify(favoriteRecipes));
+
+beforeEach(() => {
+  localStorage.clear();
+  localStorage.setItem('user', JSON.stringify({ email: 'teste@teste.com' }));
+  localStorage.setItem('doneRecipes', JSON.stringify([]));
+  localStorage.setItem('favoriteRecipes', JSON.stringify(favoriteRecipes));
+  localStorage.setItem('inProgressRecipes', JSON.stringify({ drinks: {}, meals: {} }));
+});
 
 describe('Verify if page favorite-recipes is rendering as intended', () => {
   it('Verify if page is rendering all general elements', () => {
@@ -89,7 +97,7 @@ describe('Verify if page favorite-recipes is working as intended', () => {
 
   it('Verify if Image and Name of recipe is moving to detail page', async () => {
     const { history } = renderWithRouterAndRedux(<App />, { initialEntries });
-    expect(history.location.pathname).toBe('/favorite-recipes');
+    expect(history.location.pathname).toBe(favoriteRecipesRoute);
     const mealImages = screen.queryAllByRole('link', { name: /spaghetti bolognese/i });
     expect(mealImages).toHaveLength(2);
 
@@ -100,5 +108,28 @@ describe('Verify if page favorite-recipes is working as intended', () => {
     // await waitFor(() => {
     //   expect(history.location.pathname).toBe('/meals/52770');
     // });
+  });
+
+  it('Verify if share and favorite buttons are working as intended', async () => {
+    navigator.clipboard = {
+      readText: () => Promise.resolve('http://localhost:3000/meals/52770'),
+    };
+    const { history } = renderWithRouterAndRedux(<App />, { initialEntries });
+    expect(history.location.pathname).toBe(favoriteRecipesRoute);
+    const mealImage = screen.getByTestId('0-horizontal-image');
+    expect(mealImage).toBeInTheDocument();
+
+    const shareIcons = screen.queryAllByTestId(/-horizontal-share-btn/);
+    expect(shareIcons).toHaveLength(2);
+    userEvent.click(shareIcons[0]);
+    const clipboardText = await navigator.clipboard.readText();
+    expect(clipboardText).toBe('http://localhost:3000/meals/52770');
+    // const linkCopied = await screen.findByText('Link copied!');
+    // expect(linkCopied).toBeInTheDocument();
+
+    const favoriteIcons = screen.queryAllByTestId(/-horizontal-favorite-btn/);
+    expect(favoriteIcons).toHaveLength(2);
+    userEvent.click(favoriteIcons[0]);
+    expect(mealImage).not.toBeInTheDocument();
   });
 });
