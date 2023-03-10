@@ -5,10 +5,12 @@ import './Profile.css';
 import checkIcon from '../images/checkIcon.png';
 import heartIcon from '../images/heartIcon.png';
 import logoutIcon from '../images/logoutIcon.png';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 // localStorage.setItem('user', '{"email":"email@mail.com"}');
 function Profile() {
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(localStorage.getItem('user')) || [];
   const history = useHistory();
 
   const handleRoute = ({ target }) => {
@@ -24,12 +26,17 @@ function Profile() {
   };
   return (
     <div className="app-container">
+      <Header />
       <p data-testid="profile-email" className="profile-email">{user.email}</p>
 
       <div className="d-flex flex-column">
         <div className="container-profile-button">
           <div className="container-icon">
-            <img src={ checkIcon } alt="Check Icon" className="check-icon" />
+            <img
+              src={ checkIcon }
+              alt="Check Icon"
+              className="check-icon"
+            />
           </div>
           <button
             type="button"
@@ -75,7 +82,7 @@ function Profile() {
           </button>
         </div>
       </div>
-
+      <Footer />
     </div>
   );
 }
