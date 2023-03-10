@@ -13,11 +13,15 @@ import './CardRecipe.css';
 function CardRecipeInfos({ index, id, name, type, nationality,
   category, alcoholicOrNot, doneDate, tags, linkIsCopied,
   setLinkIsCopied, setFavoriteRecipes }) {
-  const handleShare = () => {
-    const copy = clipboardCopy;
+  const handleShare = async () => {
     const linkToShare = `http://localhost:3000/${type}s/${id}`;
-    copy(linkToShare);
-    setLinkIsCopied(true);
+    try {
+      await clipboardCopy(linkToShare);
+      setLinkIsCopied(true);
+      console.log('Texto copiado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao copiar texto: ', error);
+    }
   };
 
   const handleUnfavorite = ({ target }) => {
