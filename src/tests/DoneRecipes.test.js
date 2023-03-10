@@ -106,4 +106,10 @@ describe('Verify if page done-recipes is working as intended', () => {
     //   expect(history.location.pathname).toBe('/meals/52770');
     // });
   });
+  it('Verify if page when entering page without key in localStorage it create the key', () => {
+    localStorage.removeItem('doneRecipes');
+    renderWithRouterAndRedux(<App />, { initialEntries });
+    const getDoneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
+    expect(getDoneRecipes).toEqual([]);
+  });
 });

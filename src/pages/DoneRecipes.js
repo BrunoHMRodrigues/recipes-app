@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import CardFilters from '../components/CardFilters';
 import CardRecipe from '../components/CardRecipe';
 import './DoneRecipes.css';
@@ -32,15 +32,15 @@ import './DoneRecipes.css';
 function DoneRecipes() {
   const [filterBy, setFilterBy] = useState('all');
 
-  useEffect(() => {
-    let doneRecipesStored = JSON.parse(localStorage.getItem('doneRecipes'));
-    if (!doneRecipesStored && !doneRecipesStored > 0) {
-      doneRecipesStored = [];
-      localStorage.setItem('doneRecipes', JSON.stringify(doneRecipesStored));
-    }
-  }, []);
+  let doneRecipesStored = JSON.parse(localStorage.getItem('doneRecipes'));
+  if (!doneRecipesStored) {
+    console.log('entrou');
+    doneRecipesStored = [];
+    localStorage.setItem('doneRecipes', JSON.stringify(doneRecipesStored));
+  }
 
   const getDoneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
+  console.log(getDoneRecipes);
   return (
     <div className="d-flex flex-column justify-content-center align-items-center">
       <CardFilters setFilterBy={ setFilterBy } />
