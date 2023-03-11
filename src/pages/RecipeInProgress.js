@@ -6,6 +6,7 @@ import { fetchDrinks, fetchMeals } from '../redux/actions/detailsAction';
 import CardIngredient from '../components/CardIngredient';
 import './RecipeDetails.css';
 import CardDetailsIcons from '../components/CardDetailsIcons';
+import './RecipeInProgress.css';
 
 function RecipeInProgress() {
   const [foodOrDrink, setFoodOrDrink] = useState('');
@@ -137,7 +138,7 @@ function RecipeInProgress() {
 
   return (
     foodOrDrink && (
-      <div className="container-detail-page app-container pb-5">
+      <div className="container-progress-page app-container">
         <div className="recipe-photo">
           <img
             src={ foodOrDrink === FOOD ? meals.strMealThumb : drinks.strDrinkThumb }
@@ -157,7 +158,7 @@ function RecipeInProgress() {
           recipeIsFavorited={ recipeIsFavorited }
           setRecipeIsFavorited={ setRecipeIsFavorited }
         />
-        <div>
+        <div className="d-flex flex-column align-items-center">
           <h1 data-testid="recipe-title">
             { foodOrDrink === FOOD ? meals.strMeal : drinks.strDrink }
           </h1>
