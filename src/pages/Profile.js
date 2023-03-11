@@ -25,7 +25,7 @@ function Profile() {
     history.push('/');
   };
   return (
-    <div className="app-container">
+    <div className="app-container pb-5">
       <Header />
       <p data-testid="profile-email" className="profile-email">{user.email}</p>
 
