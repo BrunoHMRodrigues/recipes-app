@@ -6,6 +6,7 @@ import { fetchDrinks, fetchMeals } from '../redux/actions/detailsAction';
 import CardIngredient from '../components/CardIngredient';
 import './RecipeDetails.css';
 import CardDetailsIcons from '../components/CardDetailsIcons';
+import Recommendation from '../components/Recommendation';
 
 // const inProgressRecipes = {
 //   drinks: {
@@ -205,7 +206,7 @@ function RecipeDetails() {
         {/* Espaço para recomendações  */}
         <div>
           <h3 className="subtitle-details">Recommended:</h3>
-
+          <Recommendation />
         </div>
         {!recipeIsDone && (
           <button
