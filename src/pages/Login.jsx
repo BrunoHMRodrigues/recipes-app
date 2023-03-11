@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ValidateEmail } from '../helper/emailValidate';
+import tomato from '../images/tomate.png';
+// import loginBackground from '../images/loginBackground.png';
+import logoRecipesApp from '../images/logoRecipesApp.png';
+import './Login.css';
 
 function Login() {
   const [infoValidation, setInfoValidation] = useState(false);
@@ -34,34 +38,42 @@ function Login() {
   };
 
   return (
-    <div>
-      <label htmlFor="email">Email:</label>
-      <input
-        type="email"
-        data-testid="email-input"
-        onChange={ handleInputs }
-        value={ email }
-        name="email"
-        id="email"
-      />
+    <div className="container-login-page app-container pb-5">
+      <div className="container-background-login">
+        <img src={ logoRecipesApp } alt="Logo Recipes" className="logo-login" />
+        <img src={ tomato } alt="Tomatoes" className="image-tomatoes" />
+      </div>
 
-      <label htmlFor="password">Senha:</label>
-      <input
-        type="password"
-        data-testid="password-input"
-        onChange={ handleInputs }
-        value={ password }
-        name="password"
-        id="password"
-      />
-      <button
-        type="button"
-        data-testid="login-submit-btn"
-        disabled={ !infoValidation }
-        onClick={ handleEnter }
-      >
-        Enter
-      </button>
+      <form className="container-login-form">
+        <h1>LOGIN</h1>
+        <label htmlFor="email">Email:</label>
+        <input
+          type="email"
+          data-testid="email-input"
+          onChange={ handleInputs }
+          value={ email }
+          name="email"
+          id="email"
+        />
+
+        <label htmlFor="password">Senha:</label>
+        <input
+          type="password"
+          data-testid="password-input"
+          onChange={ handleInputs }
+          value={ password }
+          name="password"
+          id="password"
+        />
+        <button
+          type="button"
+          data-testid="login-submit-btn"
+          disabled={ !infoValidation }
+          onClick={ handleEnter }
+        >
+          Enter
+        </button>
+      </form>
     </div>
   );
 }

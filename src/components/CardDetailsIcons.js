@@ -65,7 +65,7 @@ function CardDetailsIcons({ idReceita, meals, drinks, foodOrDrink, FOOD, DRINK,
     }
   };
   return (
-    <div>
+    <div className="d-flex">
       <button
         type="button"
         onClick={ handleShare }

@@ -1,0 +1,40 @@
+.container-login-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-height: 100vh;
+  max-width: 360px;
+  min-height: 640px;
+  position: relative;
+  width: 100vw;
+}
+
+.container-background-login {
+  align-items: center;
+  background-color: #41197f;
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+  position: relative;
+  width: 360px;
+}
+
+.logo-login {
+  height: 157.25;
+  position: absolute;
+  top: 60px;
+  width: 198px;
+}
+
+.image-tomatoes {
+  bottom: -80px;
+  height: 279px;
+  left: 0;
+  position: absolute;
+}
+
+.container-login-form {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 50px;
+}

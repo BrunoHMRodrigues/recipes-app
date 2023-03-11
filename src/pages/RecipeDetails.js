@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { fetchDrinks, fetchMeals } from '../redux/actions/detailsAction';
 import CardIngredient from '../components/CardIngredient';
-import './RecipeDetails.css';
 import CardDetailsIcons from '../components/CardDetailsIcons';
 import Recommendation from '../components/Recommendation';
+import './RecipeDetails.css';
 
 // const inProgressRecipes = {
 //   drinks: {
@@ -131,7 +131,7 @@ function RecipeDetails() {
 
   return (
     foodOrDrink && (
-      <div className="container-detail-page app-container pb-5">
+      <div className="container-detail-page app-container">
         <div className="recipe-photo">
           <img
             src={ foodOrDrink === FOOD ? meals.strMealThumb : drinks.strDrinkThumb }
@@ -151,7 +151,7 @@ function RecipeDetails() {
           recipeIsFavorited={ recipeIsFavorited }
           setRecipeIsFavorited={ setRecipeIsFavorited }
         />
-        <div>
+        <div className="d-flex flex-column align-items-center">
           <h1 data-testid="recipe-title">
             { foodOrDrink === FOOD ? meals.strMeal : drinks.strDrink }
           </h1>
