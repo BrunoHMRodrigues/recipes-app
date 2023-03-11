@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { fetchDrinks, fetchMeals } from '../redux/actions/detailsAction';
 import CardIngredient from '../components/CardIngredient';
-import './RecipeDetails.css';
 import CardDetailsIcons from '../components/CardDetailsIcons';
+import './RecipeDetails.css';
 
 // const inProgressRecipes = {
 //   drinks: {
@@ -130,7 +130,7 @@ function RecipeDetails() {
 
   return (
     foodOrDrink && (
-      <div className="container-detail-page app-container pb-5">
+      <div className="container-detail-page app-container">
         <div className="recipe-photo">
           <img
             src={ foodOrDrink === FOOD ? meals.strMealThumb : drinks.strDrinkThumb }

@@ -38,7 +38,7 @@ function Login() {
   };
 
   return (
-    <div className="container-detail-page app-container pb-5">
+    <div className="container-login-page app-container pb-5">
       <div className="container-background-login">
         <img src={ logoRecipesApp } alt="Logo Recipes" className="logo-login" />
         <img src={ tomato } alt="Tomatoes" className="image-tomatoes" />
