@@ -1,0 +1,16 @@
+.container-recommendations {
+  border: 0.55px solid #b1b1b1;
+  border-radius: 5.35px;
+  overflow-x: scroll;
+  width: 350px;
+}
+
+.container-recommendation {
+  border: 0.55px solid #b1b1b1;
+  border-radius: 5.35px;
+  margin: 10px;
+}
+
+.recommendation-image {
+  width: 150px;
+}

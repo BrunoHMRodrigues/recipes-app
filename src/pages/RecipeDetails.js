@@ -5,6 +5,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { fetchDrinks, fetchMeals } from '../redux/actions/detailsAction';
 import CardIngredient from '../components/CardIngredient';
 import CardDetailsIcons from '../components/CardDetailsIcons';
+import Recommendation from '../components/Recommendation';
 import './RecipeDetails.css';
 
 // const inProgressRecipes = {
@@ -205,7 +206,7 @@ function RecipeDetails() {
         {/* Espaço para recomendações  */}
         <div>
           <h3 className="subtitle-details">Recommended:</h3>
-
+          <Recommendation />
         </div>
         {!recipeIsDone && (
           <button
